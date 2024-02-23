@@ -24,6 +24,17 @@ public class Movie {
     public static List<Movie> initializeMovies(){
         List<Movie> movies = new ArrayList<>();
         // TODO add some dummy data here
+        Movie WolfofWallstreat = new Movie("Wolf of Wallstreat", "Bla BLa BLa");
+        Movie Inception = new Movie("Inception","Bla Bla BLa" );
+        Movie TheDarkNight = new Movie("The Dark Night","Bla BLa Bla");
+
+
+        movies.add(WolfofWallstreat);
+        movies.add(Inception);
+        movies.add(TheDarkNight);
+
+
+
 
         return movies;
     }
