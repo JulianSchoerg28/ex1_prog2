@@ -6,7 +6,7 @@ import java.util.List;
 public class Genre {
     String genre;
 
-
+    public String getGenreName(){return genre;}
 
     public Genre(String genre) {
         this.genre = genre;
