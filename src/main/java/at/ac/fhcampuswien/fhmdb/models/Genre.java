@@ -6,12 +6,15 @@ import java.util.List;
 public class Genre {
     String genre;
 
+
+
     public Genre(String genre) {
         this.genre = genre;
     }
 
-    public static List<Genre> initalizeGenre(){
+    public static List<Genre> initializeGenre(){
         List<Genre> allGenre = new ArrayList<>();
+
 
         String[] genreNames = {"ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY",
                 "CRIME", "DRAMA", "DOCUMENTARY", "FAMILY", "FANTASY", "HISTORY",

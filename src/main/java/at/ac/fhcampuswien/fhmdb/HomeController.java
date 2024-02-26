@@ -31,10 +31,10 @@ public class HomeController implements Initializable {
 
     @FXML
     public JFXButton sortBtn;
+    public List<Genre> allGenre = Genre.initializeGenre();
 
-    public List<Movie> allMovies = Movie.initializeMovies();
+    public List<Movie> allMovies = Movie.initializeMovies(allGenre);
 
-    public List<Genre> allGenre = Genre.initalizeGenre();
 
     private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
