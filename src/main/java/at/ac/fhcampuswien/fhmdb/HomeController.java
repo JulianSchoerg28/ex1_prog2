@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,7 +48,6 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
 
 
-
         // TODO add genre filter items with genreComboBox.getItems().addAll(...)
         genreComboBox.setPromptText("Filter by Genre");
 
@@ -58,15 +56,34 @@ public class HomeController implements Initializable {
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
-            if(sortBtn.getText().equals("Sort (asc)")) {
+            if (sortBtn.getText().equals("Sort (asc)")) {
                 // TODO sort observableMovies ascending
                 sortBtn.setText("Sort (desc)");
+                sortasc(observableMovies);
             } else {
                 // TODO sort observableMovies descending
                 sortBtn.setText("Sort (asc)");
+                sortdesc(observableMovies);
             }
         });
-
-
     }
+
+    public void sortasc(ObservableList<Movie> observableMovies) {
+        // Sortieren der Liste von Filmen nach dem Titel
+        Collections.sort(observableMovies, (m1, m2) -> m1.getTitle().compareTo(m2.getTitle()));
+
+
+        for (Movie movie : observableMovies) {
+            System.out.println(movie.getTitle());
+        }
+    }
+
+    public void sortdesc(ObservableList<Movie> observableMovies) {
+        Collections.sort(observableMovies, (m1, m2) -> m2.getTitle().compareTo(m1.getTitle()));
+    }
+
+
 }
+
+
+
