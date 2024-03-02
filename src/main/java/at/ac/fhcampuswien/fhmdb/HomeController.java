@@ -13,9 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class HomeController implements Initializable {
     @FXML
@@ -28,16 +26,19 @@ public class HomeController implements Initializable {
     public JFXListView movieListView;
 
     @FXML
-    public JFXComboBox genreComboBox;
+    public JFXComboBox<String> genreComboBox;
 
     @FXML
     public JFXButton sortBtn;
+
+    @FXML
+    public JFXButton resetBtn;
     public List<Genre> allGenre = Genre.initializeGenre();
 
     public List<Movie> allMovies = Movie.initializeMovies(allGenre);
 
 
-    private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,9 +51,20 @@ public class HomeController implements Initializable {
 
         // TODO add genre filter items with genreComboBox.getItems().addAll(...)
         genreComboBox.setPromptText("Filter by Genre");
+        for (Genre genre : allGenre) {
+            genreComboBox.getItems().add(genre.getGenreName());
+        }
+
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
+        searchBtn.setOnAction(actionEvent -> {
+            filter();
+        });
+
+        resetBtn.setOnAction(actionEvent -> {
+            resetFilter();
+        });
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
@@ -68,21 +80,59 @@ public class HomeController implements Initializable {
         });
     }
 
-    public void sortasc(ObservableList<Movie> observableMovies) {
-        // Sortieren der Liste von Filmen nach dem Titel
-        Collections.sort(observableMovies, (m1, m2) -> m1.getTitle().compareTo(m2.getTitle()));
+    public void sortasc(List<Movie> observableMovies) {
+        Collections.sort(observableMovies);
+    }
 
+    public void sortdesc(List<Movie> observableMovies) {
+        Collections.sort(observableMovies);
+        Collections.reverse(observableMovies);
+    }
 
-        for (Movie movie : observableMovies) {
-            System.out.println(movie.getTitle());
+    public void filter(){
+        String selected = genreComboBox.getValue();
+        if(selected == null){
+            System.out.println("null");
+            return;
         }
+
+        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+        Set<Movie> filtertMovies = new HashSet<>();
+
+        for(Movie movie : allMovies){
+            List<Genre> genres = movie.getGenre();
+            for(Genre genre : genres){
+                if((genre.getGenreName()).equals(selected) && !filtertMovies.contains(movie)){
+                    filtertMovies.add(movie);
+                }
+            }
+        }
+
+        newMovieList.addAll(filtertMovies);
+
+        if(movieListView != null){
+            movieListView.setItems(newMovieList);
+            movieListView.setCellFactory(movieListView -> new MovieCell());
+        }
+
+        observableMovies = newMovieList;
+
     }
 
-    public void sortdesc(ObservableList<Movie> observableMovies) {
-        Collections.sort(observableMovies, (m1, m2) -> m2.getTitle().compareTo(m1.getTitle()));
+    public void resetFilter(){
+        genreComboBox.setValue(null);
+
+        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+
+        newMovieList.addAll(allMovies);
+
+        if(movieListView != null){
+            movieListView.setItems(newMovieList);
+            movieListView.setCellFactory(movieListView -> new MovieCell());
+        }
+
+        observableMovies = newMovieList;
     }
-
-
 }
 
 

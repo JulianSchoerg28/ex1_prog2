@@ -1,6 +1,9 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import javafx.util.StringConverter;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Genre {

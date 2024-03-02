@@ -27,6 +27,10 @@ public class MovieCell extends ListCell<Movie> {
                     movie.getDescription() != null
                             ? movie.getDescription()
                             : "No description available"
+
+   /*                 movie.getGenre() != null
+                            ? movie.getDescription()
+                            : "no Genre"*/
             );
 
 

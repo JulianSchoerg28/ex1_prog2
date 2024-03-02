@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Movie{
+public class Movie implements Comparable<Movie>{
     private String title;
     private String description;
     private List<Genre> genres;
@@ -35,14 +35,14 @@ public class Movie{
         List<Movie> movies = new ArrayList<>();
         // TODO add some dummy data here
 
-        Movie WolfofWallstreat = new Movie("Wolf of Wallstreat", "Bla BLa BLa", Arrays.asList(allGenre.get(3),allGenre.get(5)));
+        Movie WolfofWallstreet = new Movie("Wolf of Wallstreet", "Bla BLa BLa", Arrays.asList(allGenre.get(3),allGenre.get(5)));
 
-        Movie Inception = new Movie("Inception","Bla Bla BLa",Arrays.asList(allGenre.get(3),allGenre.get(5)));
+        Movie Inception = new Movie("Inception","Bla Bla BLa",Arrays.asList(allGenre.get(3),allGenre.get(4)));
 
-        Movie TheDarkNight = new Movie("The Dark Night","Bla BLa Bla",Arrays.asList(allGenre.get(3),allGenre.get(5)));
+        Movie TheDarkNight = new Movie("The Dark Night","Bla BLa Bla",Arrays.asList(allGenre.get(5),allGenre.get(6)));
 
 
-        movies.add(WolfofWallstreat);
+        movies.add(WolfofWallstreet);
         movies.add(Inception);
         movies.add(TheDarkNight);
 
@@ -55,5 +55,10 @@ public class Movie{
         //17="THRILLER",    18="WAR",           19="WESTERN"
 
         return movies;
+    }
+
+    @Override
+    public int compareTo(Movie o) {
+        return this.getTitle().compareTo(o.getTitle());
     }
 }
