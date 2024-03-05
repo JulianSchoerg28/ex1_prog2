@@ -59,7 +59,8 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
-            filter();
+            filterMovies();
+            searchbox();
         });
 
         resetBtn.setOnAction(actionEvent -> {
@@ -89,26 +90,15 @@ public class HomeController implements Initializable {
         Collections.reverse(observableMovies);
     }
 
-    public void filter(){
-        String selected = genreComboBox.getValue();
-        if(selected == null){
+    public void filterMovies(){
+        String selectedGenre = genreComboBox.getValue();
+        if(selectedGenre == null){
             System.out.println("null");
             return;
         }
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
-        Set<Movie> filtertMovies = new HashSet<>();
-
-        for(Movie movie : allMovies){
-            List<Genre> genres = movie.getGenre();
-            for(Genre genre : genres){
-                if((genre.getGenreName()).equals(selected) && !filtertMovies.contains(movie)){
-                    filtertMovies.add(movie);
-                }
-            }
-        }
-
-        newMovieList.addAll(filtertMovies);
+        newMovieList.addAll(filter(selectedGenre));
 
         if(movieListView != null){
             movieListView.setItems(newMovieList);
@@ -119,7 +109,22 @@ public class HomeController implements Initializable {
 
     }
 
+    public Set<Movie> filter (String selectedGenre){
+        Set<Movie> filtertMovies = new HashSet<>();
+
+        for(Movie movie : allMovies){
+            List<Genre> genres = movie.getGenre();
+            for(Genre genre : genres){
+                if((genre.getGenreName()).equals(selectedGenre)){
+                    filtertMovies.add(movie);
+                }
+            }
+        }
+        return filtertMovies;
+    }
+
     public void resetFilter(){
+        //TODO: nochmal schauen, funkt nd immer zu 100%
         genreComboBox.setValue(null);
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
@@ -133,6 +138,13 @@ public class HomeController implements Initializable {
 
         observableMovies = newMovieList;
     }
+
+    public void searchbox(){
+        String input = searchField.getText();
+
+    }
+
+
 }
 
 
