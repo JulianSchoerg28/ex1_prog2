@@ -60,7 +60,7 @@ public class HomeController implements Initializable {
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
             filterMovies();
-            searchbox();
+            //searchbox();
         });
 
         resetBtn.setOnAction(actionEvent -> {
@@ -93,7 +93,6 @@ public class HomeController implements Initializable {
     public void filterMovies(){
         String selectedGenre = genreComboBox.getValue();
         if(selectedGenre == null){
-            System.out.println("null");
             return;
         }
 

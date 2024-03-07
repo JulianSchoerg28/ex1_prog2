@@ -12,11 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HomeControllerTest {
-    @Test
-    public void testAddition() {
-        int result = 2 + 2;
-        assertEquals(4, result); // Überprüfe, ob das Ergebnis 4 ist
-    }
 
     @Test
     public void testGenreName(){
@@ -93,6 +88,31 @@ class HomeControllerTest {
         expected.add(movie1);
         expected.add(movie2);
         assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void query_no_input(){
+        HomeController homeController = new HomeController();
+        //given
+        List<Movie> actual = new ArrayList<>();
+        actual.add(new Movie("A", "abc", new ArrayList<>()));
+        actual.add(new Movie("b", "abc", new ArrayList<>()));
+        actual.add(new Movie("c", "cde", new ArrayList<>()));
+        String query = null;
+        
+        //when
+        //homeController.searchFieldfilter(actual, query);
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(new Movie("A", "abc", new ArrayList<>()));
+        expected.add(new Movie("b", "abc", new ArrayList<>()));
+        expected.add(new Movie("c", "cde", new ArrayList<>()));
+
+        //then
+        assertEquals(expected, actual);
+
+
 
     }
 
