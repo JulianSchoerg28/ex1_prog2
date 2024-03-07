@@ -92,16 +92,17 @@ public class HomeController implements Initializable {
 
     public void filterGenre(){
         String selectedGenre = genreComboBox.getValue();
+        String input = searchField.getText().toLowerCase();
+        System.out.println(input);
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
 
         if(genreComboBox.getValue() != null){
-//            newMovieList.addAll(filterGenre(selectedGenre));
-            filterGenre(selectedGenre, newMovieList);
+            newMovieList.addAll(filterGenre(selectedGenre, newMovieList));
         }
-
-
-
+        if(input != null){
+            newMovieList.addAll(searchbox(input, newMovieList));
+        }
 
         if(movieListView != null){
             movieListView.setItems(newMovieList);
@@ -112,25 +113,22 @@ public class HomeController implements Initializable {
 
     }
 
-    public ObservableList<Movie> filterGenre(String selectedGenre, ObservableList<Movie> newMovieList){
-//        Set<Movie> filtertMovies = new HashSet<>();
-
+    public Set<Movie> filterGenre(String selectedGenre, ObservableList<Movie> newMovieList){
+        Set<Movie> filtertMovies = new HashSet<>();
         for(Movie movie : allMovies){
             List<Genre> genres = movie.getGenre();
             for(Genre genre : genres){
                 if((genre.getGenreName()).equals(selectedGenre)){
-//                    filtertMovies.add(movie);
-                    newMovieList.add(movie);
+                    filtertMovies.add(movie);
                 }
             }
         }
-//        return filtertMovies;
-        return newMovieList;
+        return filtertMovies;
     }
 
     public void resetFilter(){
-        //TODO: nochmal schauen, funkt nd immer zu 100%
         genreComboBox.setValue(null);
+        searchField.setText(null);
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
@@ -144,9 +142,17 @@ public class HomeController implements Initializable {
         observableMovies = newMovieList;
     }
 
-    public void searchbox(){
-        String input = searchField.getText();
-
+    public Set<Movie> searchbox(String input, ObservableList<Movie> newMovieList){
+        Set<Movie> filtertMovies = new HashSet<>();
+        for(Movie movie : allMovies){
+            //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
+            String title = movie.getTitle().toLowerCase();
+            String description = movie.getDescription().toLowerCase();
+            if((title.contains(input) ||description.contains(input)) && !newMovieList.contains(movie)){
+                filtertMovies.add(movie);
+            }
+        }
+        return filtertMovies;
     }
 
 

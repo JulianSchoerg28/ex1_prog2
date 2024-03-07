@@ -39,7 +39,7 @@ public class Movie implements Comparable<Movie>{
 
         Movie Inception = new Movie("Inception","Bla Bla BLa",Arrays.asList(allGenre.get(3),allGenre.get(4)));
 
-        Movie TheDarkNight = new Movie("The Dark Night","Bla BLa Bla",Arrays.asList(allGenre.get(5),allGenre.get(6)));
+        Movie TheDarkNight = new Movie("The Dark Night","Blu BLa Bla",Arrays.asList(allGenre.get(5),allGenre.get(6)));
 
 
         movies.add(WolfofWallstreet);
