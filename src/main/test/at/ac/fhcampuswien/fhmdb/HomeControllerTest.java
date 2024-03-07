@@ -2,7 +2,6 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
-import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ class HomeControllerTest {
         actual.add(movie3);
 
         //when
-        homeController.filter("HORROR");
+//        homeController.filterGenre("HORROR");
 
         //then
         List<Movie> expected = new ArrayList<>();

@@ -59,8 +59,8 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
-            filterMovies();
-            //searchbox();
+            filterGenre();
+
         });
 
         resetBtn.setOnAction(actionEvent -> {
@@ -90,14 +90,18 @@ public class HomeController implements Initializable {
         Collections.reverse(observableMovies);
     }
 
-    public void filterMovies(){
+    public void filterGenre(){
         String selectedGenre = genreComboBox.getValue();
-        if(selectedGenre == null){
-            return;
+        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+
+
+        if(genreComboBox.getValue() != null){
+//            newMovieList.addAll(filterGenre(selectedGenre));
+            filterGenre(selectedGenre, newMovieList);
         }
 
-        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
-        newMovieList.addAll(filter(selectedGenre));
+
+
 
         if(movieListView != null){
             movieListView.setItems(newMovieList);
@@ -108,18 +112,20 @@ public class HomeController implements Initializable {
 
     }
 
-    public Set<Movie> filter (String selectedGenre){
-        Set<Movie> filtertMovies = new HashSet<>();
+    public ObservableList<Movie> filterGenre(String selectedGenre, ObservableList<Movie> newMovieList){
+//        Set<Movie> filtertMovies = new HashSet<>();
 
         for(Movie movie : allMovies){
             List<Genre> genres = movie.getGenre();
             for(Genre genre : genres){
                 if((genre.getGenreName()).equals(selectedGenre)){
-                    filtertMovies.add(movie);
+//                    filtertMovies.add(movie);
+                    newMovieList.add(movie);
                 }
             }
         }
-        return filtertMovies;
+//        return filtertMovies;
+        return newMovieList;
     }
 
     public void resetFilter(){
