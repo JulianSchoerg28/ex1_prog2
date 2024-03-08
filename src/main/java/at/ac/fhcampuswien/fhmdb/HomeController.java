@@ -27,7 +27,7 @@ public class HomeController implements Initializable {
     public JFXListView movieListView;
 
     @FXML
-    public JFXComboBox<String> genreComboBox;
+    public JFXComboBox<Genre> genreComboBox;
 
     @FXML
     public JFXButton sortBtn;
@@ -52,10 +52,8 @@ public class HomeController implements Initializable {
 
         // TODO add genre filter items with genreComboBox.getItems().addAll(...)
         genreComboBox.setPromptText("Filter by Genre");
-        for (Genre genre : allGenre) {
-            genreComboBox.getItems().add(genre.getGenreName());
-        }
-
+        ObservableList<Genre> genreObservableList = FXCollections.observableArrayList(allGenre);
+            genreComboBox.setItems(genreObservableList);
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
@@ -80,43 +78,23 @@ public class HomeController implements Initializable {
             }
         });
     }
-//        sortBtn.setOnAction(actionEvent -> {
-//            if (sortBtn.getText().equals("Sort (asc)")) {
-//                // TODO sort observableMovies ascending
-//                sortBtn.setText("Sort (desc)");
-//                sortasc(observableMovies);
-//            } else {
-//                // TODO sort observableMovies descending
-//                sortBtn.setText("Sort (asc)");
-//                sortdesc(observableMovies);
-//            }
-//        });
-//    }
 
-//    public void sortasc(List<Movie> observableMovies) {
-//        Collections.sort(observableMovies);
-//    }
-//
-//    public void sortdesc(List<Movie> observableMovies) {
-//        Collections.sort(observableMovies);
-//        Collections.reverse(observableMovies);
-//    }
 
     public void filter(){
-        String selectedGenre = genreComboBox.getValue();
+        Genre selectedGenre = genreComboBox.getSelectionModel().getSelectedItem();
         String input = searchField.getText().toLowerCase();
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+        ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
-
-        if(genreComboBox.getValue() != null){
+        if(genreComboBox.getSelectionModel().getSelectedItem() != null){
             newMovieList.addAll(filterGenre(selectedGenre));
+        }else{
+            newMovieList.addAll(allMovies);
         }
-        if(input != null){
-            newMovieList.addAll(searchbox(input, newMovieList));
-        }
+        filteredMovieList.addAll(searchbox(input, newMovieList));
 
         if(movieListView != null){
-            movieListView.setItems(newMovieList);
+            movieListView.setItems(filteredMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
         }
 
@@ -124,26 +102,23 @@ public class HomeController implements Initializable {
 
     }
 
-    public Set<Movie> filterGenre(String selectedGenre){
+    public Set<Movie> filterGenre(Genre selectedGenre){
         Set<Movie> filtertMovies = new HashSet<>();
         for(Movie movie : allMovies){
-            List<Genre> genres = movie.getGenre();
-            for(Genre genre : genres){
-                if((genre.getGenreName()).equals(selectedGenre)){
-                    filtertMovies.add(movie);
-                }
-            }
+           if (movie.getGenre().contains(selectedGenre)){
+               filtertMovies.add(movie);
+           }
         }
         return filtertMovies;
     }
 
     public Set<Movie> searchbox(String input, ObservableList<Movie> newMovieList){
         Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : allMovies){
+        for(Movie movie : newMovieList){
             //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
             String title = movie.getTitle().toLowerCase();
             String description = movie.getDescription().toLowerCase();
-            if((title.contains(input) ||description.contains(input)) && !newMovieList.contains(movie)){
+            if((title.contains(input) ||description.contains(input))){
                 filtertMovies.add(movie);
             }
         }

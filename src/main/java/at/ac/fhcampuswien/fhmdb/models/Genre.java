@@ -31,4 +31,10 @@ public class Genre {
         return allGenre;
     }
 
+    @Override
+    public String toString() {
+        return genre;
+    }
+
+
 }
