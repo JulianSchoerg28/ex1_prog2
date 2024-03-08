@@ -22,11 +22,13 @@ public class MovieCell extends ListCell<Movie> {
             setText(null);
         } else {
             this.getStyleClass().add("movie-cell");
+            String genreText = movie.getGenresAsString();
             title.setText(movie.getTitle());
             detail.setText(
-                    movie.getDescription() != null
+                    (movie.getDescription() != null
                             ? movie.getDescription()
-                            : "No description available"
+                            : "No description available")
+                    +"\n\n"+movie.getGenresAsString()
             );
 
 

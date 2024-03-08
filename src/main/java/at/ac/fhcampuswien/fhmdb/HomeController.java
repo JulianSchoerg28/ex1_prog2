@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
     @FXML
@@ -69,25 +70,37 @@ public class HomeController implements Initializable {
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort (asc)")) {
-                // TODO sort observableMovies ascending
+                List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
+                observableMovies.setAll(sortedMovie);
                 sortBtn.setText("Sort (desc)");
-                sortasc(observableMovies);
             } else {
-                // TODO sort observableMovies descending
                 sortBtn.setText("Sort (asc)");
-                sortdesc(observableMovies);
+                List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
+                observableMovies.setAll(sortedMovie);
             }
         });
     }
+//        sortBtn.setOnAction(actionEvent -> {
+//            if (sortBtn.getText().equals("Sort (asc)")) {
+//                // TODO sort observableMovies ascending
+//                sortBtn.setText("Sort (desc)");
+//                sortasc(observableMovies);
+//            } else {
+//                // TODO sort observableMovies descending
+//                sortBtn.setText("Sort (asc)");
+//                sortdesc(observableMovies);
+//            }
+//        });
+//    }
 
-    public void sortasc(List<Movie> observableMovies) {
-        Collections.sort(observableMovies);
-    }
-
-    public void sortdesc(List<Movie> observableMovies) {
-        Collections.sort(observableMovies);
-        Collections.reverse(observableMovies);
-    }
+//    public void sortasc(List<Movie> observableMovies) {
+//        Collections.sort(observableMovies);
+//    }
+//
+//    public void sortdesc(List<Movie> observableMovies) {
+//        Collections.sort(observableMovies);
+//        Collections.reverse(observableMovies);
+//    }
 
     public void filter(){
         String selectedGenre = genreComboBox.getValue();

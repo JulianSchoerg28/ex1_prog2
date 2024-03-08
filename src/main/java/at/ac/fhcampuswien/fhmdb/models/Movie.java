@@ -61,4 +61,14 @@ public class Movie implements Comparable<Movie>{
     public int compareTo(Movie o) {
         return this.getTitle().compareTo(o.getTitle());
     }
+    public String getGenresAsString() {
+        StringBuilder genresString = new StringBuilder();
+        for (int i = 0; i < genres.size(); i++) {
+            genresString.append(genres.get(i).getGenreName());
+            if (i < genres.size() - 1) {
+                genresString.append(", ");
+            }
+        }
+        return genresString.toString();
+    }
 }
