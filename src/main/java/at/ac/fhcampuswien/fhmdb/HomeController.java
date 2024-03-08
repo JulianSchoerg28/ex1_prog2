@@ -59,8 +59,7 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
-            filterGenre();
-
+            filter();
         });
 
         resetBtn.setOnAction(actionEvent -> {
@@ -90,15 +89,14 @@ public class HomeController implements Initializable {
         Collections.reverse(observableMovies);
     }
 
-    public void filterGenre(){
+    public void filter(){
         String selectedGenre = genreComboBox.getValue();
         String input = searchField.getText().toLowerCase();
-        System.out.println(input);
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
 
         if(genreComboBox.getValue() != null){
-            newMovieList.addAll(filterGenre(selectedGenre, newMovieList));
+            newMovieList.addAll(filterGenre(selectedGenre));
         }
         if(input != null){
             newMovieList.addAll(searchbox(input, newMovieList));
@@ -113,7 +111,7 @@ public class HomeController implements Initializable {
 
     }
 
-    public Set<Movie> filterGenre(String selectedGenre, ObservableList<Movie> newMovieList){
+    public Set<Movie> filterGenre(String selectedGenre){
         Set<Movie> filtertMovies = new HashSet<>();
         for(Movie movie : allMovies){
             List<Genre> genres = movie.getGenre();
@@ -126,6 +124,18 @@ public class HomeController implements Initializable {
         return filtertMovies;
     }
 
+    public Set<Movie> searchbox(String input, ObservableList<Movie> newMovieList){
+        Set<Movie> filtertMovies = new HashSet<>();
+        for(Movie movie : allMovies){
+            //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
+            String title = movie.getTitle().toLowerCase();
+            String description = movie.getDescription().toLowerCase();
+            if((title.contains(input) ||description.contains(input)) && !newMovieList.contains(movie)){
+                filtertMovies.add(movie);
+            }
+        }
+        return filtertMovies;
+    }
     public void resetFilter(){
         genreComboBox.setValue(null);
         searchField.setText(null);
@@ -142,18 +152,7 @@ public class HomeController implements Initializable {
         observableMovies = newMovieList;
     }
 
-    public Set<Movie> searchbox(String input, ObservableList<Movie> newMovieList){
-        Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : allMovies){
-            //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
-            String title = movie.getTitle().toLowerCase();
-            String description = movie.getDescription().toLowerCase();
-            if((title.contains(input) ||description.contains(input)) && !newMovieList.contains(movie)){
-                filtertMovies.add(movie);
-            }
-        }
-        return filtertMovies;
-    }
+
 
 
 }

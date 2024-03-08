@@ -2,6 +2,9 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -73,35 +76,36 @@ class HomeControllerTest {
         Movie movie1 = new Movie("A", "", new ArrayList<>(Arrays.asList(new Genre("CRIME"), new Genre("HORROR"))));
         Movie movie2 = new Movie("B", "", new ArrayList<>(Arrays.asList(new Genre("HORROR"), new Genre("MYSTERY"))));
         Movie movie3 = new Movie("C", "", new ArrayList<>(Arrays.asList(new Genre("SPORT"))));
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
 
-        List<Movie> actual = new ArrayList<>();
         actual.add(movie1);
         actual.add(movie2);
         actual.add(movie3);
 
         //when
-//        homeController.filterGenre("HORROR");
+        homeController.filterGenre("HORROR");
 
         //then
         List<Movie> expected = new ArrayList<>();
         expected.add(movie1);
         expected.add(movie2);
-        assertEquals(expected, actual);
 
+        assertEquals(expected, actual);
     }
 
     @Test
-    void query_no_input(){
+    void test_searchbox_with_Uppercaseletters(){
         HomeController homeController = new HomeController();
         //given
+        ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
         List<Movie> actual = new ArrayList<>();
-        actual.add(new Movie("A", "abc", new ArrayList<>()));
-        actual.add(new Movie("b", "abc", new ArrayList<>()));
-        actual.add(new Movie("c", "cde", new ArrayList<>()));
-        String query = null;
+        actual.add(new Movie("Abc", "abc", new ArrayList<>()));
+        actual.add(new Movie("Bcd", "abc", new ArrayList<>()));
+        actual.add(new Movie("Cde", "jkl", new ArrayList<>()));
+        String query = "aB";
         
         //when
-        //homeController.searchFieldfilter(actual, query);
+        homeController.searchbox(query,observableMovies );
 
         List<Movie> expected = new ArrayList<>();
         expected.add(new Movie("A", "abc", new ArrayList<>()));
