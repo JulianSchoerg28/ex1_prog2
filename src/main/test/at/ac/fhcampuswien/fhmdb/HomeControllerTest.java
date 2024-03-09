@@ -30,7 +30,8 @@ class HomeControllerTest {
         Movie movie2 = new Movie("AB", "", new ArrayList<>());
         Movie movie3 = new Movie("B", "", new ArrayList<>());
 
-        List<Movie> actual = new ArrayList<>();
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+//        List<Movie> actual = new ArrayList<>();
         actual.add(movie3);
         actual.add(movie1);
         actual.add(movie2);
@@ -53,7 +54,8 @@ class HomeControllerTest {
         Movie movie2 = new Movie("Ab", "", new ArrayList<>());
         Movie movie3 = new Movie("Be", "", new ArrayList<>());
 
-        List<Movie> actual = new ArrayList<>();
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+//        List<Movie> actual = new ArrayList<>();
         actual.add(movie2);
         actual.add(movie1);
         actual.add(movie3);
@@ -82,8 +84,10 @@ class HomeControllerTest {
         actual.add(movie2);
         actual.add(movie3);
 
+        Genre genre = new Genre("HORROR");
+
         //when
-        homeController.filterGenre("HORROR");
+        homeController.filterGenre(genre, actual);
 
         //then
         List<Movie> expected = new ArrayList<>();
@@ -97,20 +101,24 @@ class HomeControllerTest {
     void test_searchbox_with_Uppercaseletters(){
         HomeController homeController = new HomeController();
         //given
-        ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
-        List<Movie> actual = new ArrayList<>();
-        actual.add(new Movie("Abc", "abc", new ArrayList<>()));
-        actual.add(new Movie("Bcd", "abc", new ArrayList<>()));
-        actual.add(new Movie("Cde", "jkl", new ArrayList<>()));
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+//        List<Movie> actual = new ArrayList<>();
+
+        Movie movie1 = new Movie("Abc", "abc", new ArrayList<>());
+        Movie movie2 = new Movie("Bcd", "abc", new ArrayList<>());
+        Movie movie3 = new Movie("Cde", "jkl", new ArrayList<>());
+        actual.add(movie1);
+        actual.add(movie2);
+        actual.add(movie3);
+
         String query = "aB";
         
         //when
-        homeController.searchbox(query,observableMovies );
+        homeController.searchbox(query, actual );
 
         List<Movie> expected = new ArrayList<>();
-        expected.add(new Movie("A", "abc", new ArrayList<>()));
-        expected.add(new Movie("b", "abc", new ArrayList<>()));
-        expected.add(new Movie("c", "cde", new ArrayList<>()));
+        expected.add(movie1);
+        expected.add(movie2);
 
         //then
         assertEquals(expected, actual);

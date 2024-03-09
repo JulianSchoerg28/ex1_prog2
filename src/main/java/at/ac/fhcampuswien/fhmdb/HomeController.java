@@ -68,30 +68,42 @@ public class HomeController implements Initializable {
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort (asc)")) {
-                List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
-                observableMovies.setAll(sortedMovie);
+                sortasc(observableMovies);
+
                 sortBtn.setText("Sort (desc)");
             } else {
                 sortBtn.setText("Sort (asc)");
-                List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
-                observableMovies.setAll(sortedMovie);
+                sortdesc(observableMovies);
             }
         });
+    }
+
+    public void sortasc(ObservableList<Movie> observableMovies){
+        List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
+        observableMovies.setAll(sortedMovie);
+    }
+
+    public void sortdesc(ObservableList<Movie> observableMovies){
+        List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
+        observableMovies.setAll(sortedMovie);
     }
 
 
     public void filter(){
         Genre selectedGenre = genreComboBox.getSelectionModel().getSelectedItem();
-        String input = searchField.getText().toLowerCase();
+        String input = searchField.getText();
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
         ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
         if(genreComboBox.getSelectionModel().getSelectedItem() != null){
-            newMovieList.addAll(filterGenre(selectedGenre));
+            newMovieList.addAll(filterGenre(selectedGenre, allMovies));
         }else{
             newMovieList.addAll(allMovies);
         }
-        filteredMovieList.addAll(searchbox(input, newMovieList));
+        if(!input.isEmpty()){
+            filteredMovieList.addAll(searchbox(input, newMovieList));
+        }
+
 
         if(movieListView != null){
             movieListView.setItems(filteredMovieList);
@@ -102,7 +114,7 @@ public class HomeController implements Initializable {
 
     }
 
-    public Set<Movie> filterGenre(Genre selectedGenre){
+    public Set<Movie> filterGenre(Genre selectedGenre, List<Movie> allMovies){
         Set<Movie> filtertMovies = new HashSet<>();
         for(Movie movie : allMovies){
            if (movie.getGenre().contains(selectedGenre)){
@@ -118,7 +130,7 @@ public class HomeController implements Initializable {
             //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
             String title = movie.getTitle().toLowerCase();
             String description = movie.getDescription().toLowerCase();
-            if((title.contains(input) ||description.contains(input))){
+            if((title.contains(input.toLowerCase()) ||description.contains(input.toLowerCase()))){
                 filtertMovies.add(movie);
             }
         }
