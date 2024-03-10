@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class HomeControllerTest {
 
     @Test
-    public void testGenreName(){
+    void testGenreName(){
         Genre Drama = new Genre("Drama");
         String result = Drama.getGenreName();
         assertEquals("Drama",result);
     }
 
     @Test
-    public void test_sort_movies_asc(){
+    void test_sort_movies_asc(){
         //given
         HomeController homeController = new HomeController();
         Movie movie1 = new Movie("AA", "", new ArrayList<>());
@@ -47,7 +47,7 @@ class HomeControllerTest {
         assertEquals(expected, actual);
     }
     @Test
-    public void test_sort_movies_desc(){
+    void test_sort_movies_desc(){
         //given
         HomeController homeController = new HomeController();
         Movie movie1 = new Movie("Aa", "", new ArrayList<>());
@@ -72,7 +72,7 @@ class HomeControllerTest {
     }
 
     @Test
-    public void test_genre_filter(){
+    void test_genre_filter(){
         //given
         HomeController homeController = new HomeController();
 
@@ -104,7 +104,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void test_searchbox_with_Uppercaseletters(){
+    void test_searchbox_with_uppercaseletters(){
         //given
         HomeController homeController = new HomeController();
 
@@ -164,6 +164,27 @@ class HomeControllerTest {
 
         //then
         assertEquals(expected, actual);
+
+    }
+    @Test
+    void filter_reset(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("A", "A", new ArrayList<>());
+        Movie movie2 = new Movie("B", "B", new ArrayList<>());
+        Movie movie3 = new Movie("C", "C", new ArrayList<>());
+        Movie movie4 = new Movie("D", "D", new ArrayList<>());
+
+        homeController.observableMovies = FXCollections.observableArrayList();
+
+        homeController.resetFilter();
+
+        assertEquals(homeController.allMovies.size(), homeController.observableMovies.size());
+        assertTrue(homeController.observableMovies.containsAll(homeController.allMovies));
+
+
+
 
     }
 

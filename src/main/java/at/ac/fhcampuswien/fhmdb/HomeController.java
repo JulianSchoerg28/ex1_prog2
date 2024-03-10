@@ -39,7 +39,7 @@ public class HomeController implements Initializable {
     public List<Movie> allMovies = Movie.initializeMovies(allGenre);
 
 
-    private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -135,8 +135,13 @@ public class HomeController implements Initializable {
         return filtertMovies;
     }
     public void resetFilter(){
-        genreComboBox.setValue(null);
-        searchField.setText(null);
+//
+        if (genreComboBox != null) {
+            genreComboBox.setValue(null);
+        }
+        if (searchField != null) {
+            searchField.setText("");
+        }
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
