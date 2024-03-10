@@ -68,9 +68,8 @@ public class HomeController implements Initializable {
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort (asc)")) {
-                sortasc(observableMovies);
-
                 sortBtn.setText("Sort (desc)");
+                sortasc(observableMovies);
             } else {
                 sortBtn.setText("Sort (asc)");
                 sortdesc(observableMovies);
@@ -82,12 +81,10 @@ public class HomeController implements Initializable {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
     }
-
     public void sortdesc(ObservableList<Movie> observableMovies){
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
     }
-
 
     public void filter(){
         Genre selectedGenre = genreComboBox.getSelectionModel().getSelectedItem();
@@ -100,23 +97,24 @@ public class HomeController implements Initializable {
         }else{
             newMovieList.addAll(allMovies);
         }
-        if(!input.isEmpty()){
-            filteredMovieList.addAll(searchbox(input, newMovieList));
-        }
 
+        if(input != null){
+            filteredMovieList.addAll(searchbox(input, newMovieList));
+        }else{
+            filteredMovieList.addAll(newMovieList);
+        }
 
         if(movieListView != null){
             movieListView.setItems(filteredMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
         }
 
-        observableMovies = newMovieList;
-
+        observableMovies = filteredMovieList;
     }
 
-    public Set<Movie> filterGenre(Genre selectedGenre, List<Movie> allMovies){
+    public Set<Movie> filterGenre(Genre selectedGenre, List<Movie> moviestosort){
         Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : allMovies){
+        for(Movie movie : moviestosort){
            if (movie.getGenre().contains(selectedGenre)){
                filtertMovies.add(movie);
            }
@@ -124,9 +122,9 @@ public class HomeController implements Initializable {
         return filtertMovies;
     }
 
-    public Set<Movie> searchbox(String input, ObservableList<Movie> newMovieList){
+    public Set<Movie> searchbox(String input, ObservableList<Movie> moviesToFilter){
         Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : newMovieList){
+        for(Movie movie : moviesToFilter){
             //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
             String title = movie.getTitle().toLowerCase();
             String description = movie.getDescription().toLowerCase();
