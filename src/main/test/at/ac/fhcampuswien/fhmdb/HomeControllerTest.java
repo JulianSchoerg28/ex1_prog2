@@ -4,19 +4,18 @@ import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class HomeControllerTest {
 
     @Test
-    void testGenreName(){
+    void test_GenreName(){
         Genre Drama = new Genre("Drama");
         String result = Drama.getGenreName();
         assertEquals("Drama",result);
@@ -72,7 +71,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void test_genre_filter(){
+    void genre_filter(){
         //given
         HomeController homeController = new HomeController();
 
@@ -104,7 +103,94 @@ class HomeControllerTest {
     }
 
     @Test
-    void test_searchbox_with_uppercaseletters(){
+    void searchbox_filter_Titel(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("Abc", "abc", new ArrayList<>());
+        Movie movie2 = new Movie("Bcd", "uio", new ArrayList<>());
+        Movie movie3 = new Movie("Cde", "jkl", new ArrayList<>());
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+
+        allMovies.add(movie1);
+        allMovies.add(movie2);
+        allMovies.add(movie3);
+
+        String query = "Abc";
+
+        //when
+        actual.addAll(homeController.searchbox(query,allMovies));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie1);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void searchbox_filters_description(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("Abc", "def", new ArrayList<>());
+        Movie movie2 = new Movie("Bcd", "defgh", new ArrayList<>());
+        Movie movie3 = new Movie("Cde", "jkl", new ArrayList<>());
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+
+        allMovies.add(movie1);
+        allMovies.add(movie2);
+        allMovies.add(movie3);
+
+        String query = "def";
+
+        //when
+        actual.addAll(homeController.searchbox(query,allMovies));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie1);
+        expected.add(movie2);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void searchbox_filters_titel_and_descripton(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("Abc defg", "bcd", new ArrayList<>());
+        Movie movie2 = new Movie("Cde", "jkl", new ArrayList<>());
+        Movie movie3 = new Movie("Bcd", "Abc def", new ArrayList<>());
+
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+
+        allMovies.add(movie1);
+        allMovies.add(movie2);
+        allMovies.add(movie3);
+
+        String query = "abc";
+
+        //when
+        actual.addAll(homeController.searchbox(query,allMovies));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie1);
+        expected.add(movie3);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void searchbox_with_uppercaseletters(){
         //given
         HomeController homeController = new HomeController();
 
@@ -119,8 +205,8 @@ class HomeControllerTest {
         allMovies.add(movie2);
         allMovies.add(movie3);
 
-        String query = "aB";
-        
+        String query = "AB";
+
         //when
         actual.addAll(homeController.searchbox(query,allMovies));
 
@@ -131,8 +217,67 @@ class HomeControllerTest {
         //then
         assertEquals(expected, actual);
     }
+
     @Test
-    void test_searchbox_and_genre_filter(){
+    void searchbox_with_lowercaseletters(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("Abc", "abc", new ArrayList<>());
+        Movie movie2 = new Movie("Bcd", "abc", new ArrayList<>());
+        Movie movie3 = new Movie("Cde", "jkl", new ArrayList<>());
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+
+        allMovies.add(movie1);
+        allMovies.add(movie2);
+        allMovies.add(movie3);
+
+        String query = "ab";
+
+        //when
+        actual.addAll(homeController.searchbox(query,allMovies));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie1);
+        expected.add(movie2);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void searchbox_words_with_space_between(){
+        //given
+        HomeController homeController = new HomeController();
+
+        Movie movie1 = new Movie("Abc", "abc def", new ArrayList<>());
+        Movie movie2 = new Movie("Bcd", "abc", new ArrayList<>());
+        Movie movie3 = new Movie("Abc def", "jkl", new ArrayList<>());
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+
+        allMovies.add(movie1);
+        allMovies.add(movie2);
+        allMovies.add(movie3);
+
+        String query = "abc def";
+
+        //when
+        actual.addAll(homeController.searchbox(query,allMovies));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie1);
+        expected.add(movie3);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void searchbox_and_genre_filter(){
         //given
         HomeController homeController = new HomeController();
 
@@ -182,10 +327,6 @@ class HomeControllerTest {
 
         assertEquals(homeController.allMovies.size(), homeController.observableMovies.size());
         assertTrue(homeController.observableMovies.containsAll(homeController.allMovies));
-
-
-
-
     }
 
 
