@@ -24,7 +24,6 @@ public class MovieCell extends ListCell<Movie> {
             setGraphic(null);
         } else {
             this.getStyleClass().add("movie-cell");
-            String genreText = movie.getGenresAsString();
             title.setText(movie.getTitle());
             detail.setText(
                     (movie.getDescription() != null
