@@ -130,9 +130,47 @@ class HomeControllerTest {
 
         //then
         assertEquals(expected, actual);
+    }
+    @Test
+    void test_searchbox_and_genre_filter(){
+        //given
+        HomeController homeController = new HomeController();
 
+        Genre crime = new Genre("CRIME");
+        Genre horror = new Genre("HORROR");
+        Genre mystery = new Genre("MYSTERY");
+        Genre sport = new Genre("SPORT");
 
+        Movie movie1 = new Movie("A", "ac", new ArrayList<>(Arrays.asList(crime, horror)));
+        Movie movie2 = new Movie("B", "bc", new ArrayList<>(Arrays.asList(horror, mystery)));
+        Movie movie3 = new Movie("C", "ab", new ArrayList<>(Arrays.asList(sport)));
+
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        List<Movie> movielist = new ArrayList<>();
+        ObservableList<Movie> filteredList = FXCollections.observableArrayList();
+
+        movielist.add(movie1);
+        movielist.add(movie2);
+        movielist.add(movie3);
+
+        String query = "B";
+
+        //when
+        filteredList.addAll(homeController.filterGenre(horror,movielist));
+        actual.addAll(homeController.searchbox(query,filteredList));
+
+        List<Movie> expected = new ArrayList<>();
+        expected.add(movie2);
+
+        //then
+        assertEquals(expected, actual);
 
     }
+
+
+
+
+
+
 
 }

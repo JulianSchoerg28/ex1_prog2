@@ -92,7 +92,7 @@ public class HomeController implements Initializable {
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
         ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
-        if(genreComboBox.getSelectionModel().getSelectedItem() != null){
+        if(selectedGenre != null){
             newMovieList.addAll(filterGenre(selectedGenre, allMovies));
         }else{
             newMovieList.addAll(allMovies);
