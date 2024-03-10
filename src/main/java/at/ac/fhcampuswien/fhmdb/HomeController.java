@@ -104,7 +104,6 @@ public class HomeController implements Initializable {
             filteredMovieList.addAll(newMovieList);
         }
 
-
         if(movieListView != null){
             movieListView.setItems(filteredMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
