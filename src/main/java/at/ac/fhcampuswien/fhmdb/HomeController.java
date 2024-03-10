@@ -110,7 +110,6 @@ public class HomeController implements Initializable {
         }
 
         observableMovies = filteredMovieList;
-
     }
 
     public Set<Movie> filterGenre(Genre selectedGenre, List<Movie> moviestosort){
