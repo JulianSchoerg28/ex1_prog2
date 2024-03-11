@@ -69,6 +69,8 @@ class HomeControllerTest {
         expected.add(movie2);
         expected.add(movie1);
 
+
+
         assertEquals(expected, actual);
     }
 
@@ -97,6 +99,7 @@ class HomeControllerTest {
         actual.addAll(homeController.filterGenre(horror, movielist));
         actual.stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
 
+
         //then
         List<Movie> expected = new ArrayList<>();
         expected.add(movie1);
@@ -104,6 +107,7 @@ class HomeControllerTest {
 
 
         assertEquals(expected, actual);
+
     }
 
     @Test
@@ -156,8 +160,8 @@ class HomeControllerTest {
         actual.addAll(homeController.searchbox(query,allMovies));
 
         List<Movie> expected = new ArrayList<>();
-        expected.add(movie1);
         expected.add(movie2);
+        expected.add(movie1);
 
         //then
         assertEquals(expected, actual);
@@ -323,7 +327,11 @@ class HomeControllerTest {
         Movie movie1 = new Movie("A", "A", new ArrayList<>());
         Movie movie2 = new Movie("B", "B", new ArrayList<>());
         Movie movie3 = new Movie("C", "C", new ArrayList<>());
-        Movie movie4 = new Movie("D", "D", new ArrayList<>());
+        homeController.allMovies.add(movie1);
+        homeController.allMovies.add(movie2);
+        homeController.allMovies.add(movie3);
+
+
 
         homeController.observableMovies = FXCollections.observableArrayList();
 

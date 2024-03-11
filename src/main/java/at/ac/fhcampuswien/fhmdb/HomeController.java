@@ -135,7 +135,7 @@ public class HomeController implements Initializable {
         return filtertMovies;
     }
     public void resetFilter(){
-//
+
         if (genreComboBox != null) {
             genreComboBox.setValue(null);
         }
