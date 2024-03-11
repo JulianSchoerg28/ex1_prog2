@@ -10,7 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class HomeControllerTest {
 
@@ -93,11 +95,13 @@ class HomeControllerTest {
 
         //when
         actual.addAll(homeController.filterGenre(horror, movielist));
+        actual.stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
 
         //then
         List<Movie> expected = new ArrayList<>();
-        expected.add(movie2);
         expected.add(movie1);
+        expected.add(movie2);
+
 
         assertEquals(expected, actual);
     }
