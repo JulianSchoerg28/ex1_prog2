@@ -5,18 +5,31 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Movie implements Comparable<Movie> {
+
+    private String id;
     private String title;
     private String description;
     private List<Genre> genres;
+    private int releaseYear;
+    private List<String> directors;
+    private String imgUrl;
+    private int lengthInMinutes;
+    private List<String> writers;
+    private List<String>mainCast;
+    private double rating;
+
+
+
+
 
 
     // TODO add more properties here
 
-    public Movie(String title, String description, List<Genre> genres) {
+/*    public Movie(String title, String description, List<Genre> genres) {
         this.title = title;
         this.description = description;
         this.genres = genres;
-    }
+    }*/
 
     public String getTitle() {
         return title;
@@ -30,6 +43,87 @@ public class Movie implements Comparable<Movie> {
         return genres;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
+    public List<String> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(List<String> directors) {
+        this.directors = directors;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public void setLengthInMinutes(int lengthInMinutes) {
+        this.lengthInMinutes = lengthInMinutes;
+    }
+
+    public List<String> getWriters() {
+        return writers;
+    }
+
+    public void setWriters(List<String> writers) {
+        this.writers = writers;
+    }
+
+    public List<String> getMainCast() {
+        return mainCast;
+    }
+
+    public void setMainCast(List<String> mainCast) {
+        this.mainCast = mainCast;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    /*
     public static List<Movie> initializeMovies(List<Genre> allGenre) {
         List<Movie> movies = new ArrayList<>();
         // TODO add some dummy data here
@@ -86,6 +180,7 @@ public class Movie implements Comparable<Movie> {
 
         return movies;
     }
+*/
 
     @Override
     public int compareTo(Movie o) {
