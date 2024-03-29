@@ -47,6 +47,7 @@ class HomeControllerTest {
 
         assertEquals(expected, actual);
     }
+
     @Test
     void test_sort_movies_desc(){
         //given
@@ -102,8 +103,8 @@ class HomeControllerTest {
 
         //then
         List<Movie> expected = new ArrayList<>();
-        expected.add(movie1);
         expected.add(movie2);
+        expected.add(movie1);
 
 
         assertEquals(expected, actual);
@@ -132,6 +133,7 @@ class HomeControllerTest {
         actual.addAll(homeController.searchbox(query,allMovies));
 
         List<Movie> expected = new ArrayList<>();
+
         expected.add(movie1);
 
         //then
@@ -160,8 +162,8 @@ class HomeControllerTest {
         actual.addAll(homeController.searchbox(query,allMovies));
 
         List<Movie> expected = new ArrayList<>();
-        expected.add(movie2);
         expected.add(movie1);
+        expected.add(movie2);
 
         //then
         assertEquals(expected, actual);
@@ -248,8 +250,8 @@ class HomeControllerTest {
         actual.addAll(homeController.searchbox(query,allMovies));
 
         List<Movie> expected = new ArrayList<>();
-        expected.add(movie1);
         expected.add(movie2);
+        expected.add(movie1);
 
         //then
         assertEquals(expected, actual);
@@ -319,6 +321,7 @@ class HomeControllerTest {
         assertEquals(expected, actual);
 
     }
+
     @Test
     void filter_reset(){
         //given
@@ -340,11 +343,5 @@ class HomeControllerTest {
         assertEquals(homeController.allMovies.size(), homeController.observableMovies.size());
         assertTrue(homeController.observableMovies.containsAll(homeController.allMovies));
     }
-
-
-
-
-
-
 
 }
