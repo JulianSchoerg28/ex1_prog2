@@ -19,118 +19,19 @@ public class Movie implements Comparable<Movie> {
     private List<String>mainCast;
     private double rating;
 
-    public Movie(String id, String title, List<String> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, double rating) {
-        this.id = id;
-        this.title = title;
-        this.genres = genres;
-        this.releaseYear = releaseYear;
-        this.description = description;
-        this.imgUrl = imgUrl;
-        this.lengthInMinutes = lengthInMinutes;
-        this.directors = directors;
-        this.writers = writers;
-        this.mainCast = mainCast;
-        this.rating = rating;
-    }
-
-    // TODO add more properties here
-
-/*    public Movie(String title, String description, List<Genre> genres) {
-        this.title = title;
-        this.description = description;
-        this.genres = genres;
-    }*/
-
+    //Ich glaube man braucht nur die 3 (für den HomeController)
     public String getTitle() {
         return title;
     }
-
     public String getDescription() {
         return description;
     }
-
     public List<String> getGenre() {
         return genres;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
-    }
-
-    public int getReleaseYear() {
-        return releaseYear;
-    }
-
-    public void setReleaseYear(int releaseYear) {
-        this.releaseYear = releaseYear;
-    }
-
     public List<String> getDirectors() {
         return directors;
-    }
-
-    public void setDirectors(List<String> directors) {
-        this.directors = directors;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public int getLengthInMinutes() {
-        return lengthInMinutes;
-    }
-
-    public void setLengthInMinutes(int lengthInMinutes) {
-        this.lengthInMinutes = lengthInMinutes;
-    }
-
-    public List<String> getWriters() {
-        return writers;
-    }
-
-    public void setWriters(List<String> writers) {
-        this.writers = writers;
-    }
-
-    public List<String> getMainCast() {
-        return mainCast;
-    }
-
-    public void setMainCast(List<String> mainCast) {
-        this.mainCast = mainCast;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
     }
 
     /*

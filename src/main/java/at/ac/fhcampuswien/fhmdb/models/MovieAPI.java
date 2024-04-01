@@ -5,10 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
-
 import java.util.List;
 
 public class MovieAPI {
@@ -32,7 +30,6 @@ public class MovieAPI {
 
             String responseData = response.body().string();
             System.out.print(responseData);
-
 
             Gson gson = new Gson();
 

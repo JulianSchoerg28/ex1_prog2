@@ -50,7 +50,6 @@ public class HomeController implements Initializable {
 
     public List<Movie> allMovies = MovieAPI.getMovies();*/
     public ObservableList<Genre> allGenre = FXCollections.observableArrayList(Genre.initializeGenre()); // Typ der Liste auf Genre geändert
-//    public ObservableList<Movie> allMovies = FXCollections.observableArrayList();
     public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
 
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
@@ -74,15 +73,10 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
-            filter();
-//            List<Movie> test = new ArrayList<>();
-//            test.addAll(MovieAPI.getMovies());
-//            MovieAPI.getMovies();
-//            for(Movie movies : test){
-//                System.out.println(movies.getTitle());
-//            }
-
-
+//            filter();
+//          brauchte nur was zum testen
+           long i = countMoviesFrom(allMovies, "Martin Scorsese");
+            System.out.println(i);
         });
 
         resetBtn.setOnAction(actionEvent -> {
@@ -91,13 +85,13 @@ public class HomeController implements Initializable {
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
-//            if (sortBtn.getText().equals("Sort (asc)")) {
-//                sortBtn.setText("Sort (desc)");
-//                sortasc(observableMovies);
-//            } else {
-//                sortBtn.setText("Sort (asc)");
-//                sortdesc(observableMovies);
-//            }
+            if (sortBtn.getText().equals("Sort (asc)")) {
+                sortBtn.setText("Sort (desc)");
+                sortasc(observableMovies);
+            } else {
+                sortBtn.setText("Sort (asc)");
+                sortdesc(observableMovies);
+            }
         });
     }
 
@@ -178,6 +172,18 @@ public class HomeController implements Initializable {
 
         observableMovies = newMovieList;
     }
+
+    long countMoviesFrom(List<Movie> movies, String director){
+        List<Movie> moviesss = movies.stream().filter(movie -> movie.getDirectors().contains(director)).collect(Collectors.toList());
+        //Ausgabe zu Testzwecken:
+        moviesss.forEach(System.out::println);
+        System.out.println(moviesss.size());
+        return moviesss.size();
+    }
+
+//    gibt die Anzahl der Filme eines bestimmten Regisseurs zurück.
+
+
 
 
 
