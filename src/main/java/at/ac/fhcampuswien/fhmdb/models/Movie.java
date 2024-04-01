@@ -8,20 +8,30 @@ public class Movie implements Comparable<Movie> {
 
     private String id;
     private String title;
-    private String description;
-    private List<Genre> genres;
+    private List<String> genres;
     private int releaseYear;
-    private List<String> directors;
+    private String description;
     private String imgUrl;
     private int lengthInMinutes;
+    private List<String> directors;
+
     private List<String> writers;
     private List<String>mainCast;
     private double rating;
 
-
-
-
-
+    public Movie(String id, String title, List<String> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, double rating) {
+        this.id = id;
+        this.title = title;
+        this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.directors = directors;
+        this.writers = writers;
+        this.mainCast = mainCast;
+        this.rating = rating;
+    }
 
     // TODO add more properties here
 
@@ -39,7 +49,7 @@ public class Movie implements Comparable<Movie> {
         return description;
     }
 
-    public List<Genre> getGenre() {
+    public List<String> getGenre() {
         return genres;
     }
 
@@ -59,11 +69,11 @@ public class Movie implements Comparable<Movie> {
         this.description = description;
     }
 
-    public List<Genre> getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<String> genres) {
         this.genres = genres;
     }
 

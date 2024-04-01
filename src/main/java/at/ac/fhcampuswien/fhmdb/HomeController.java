@@ -18,9 +18,14 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import java.lang.reflect.Type;
+
+
 
 
 public class HomeController implements Initializable {
@@ -31,7 +36,7 @@ public class HomeController implements Initializable {
     public TextField searchField;
 
     @FXML
-    public JFXListView movieListView;
+    public JFXListView<Movie> movieListView;
 
     @FXML
     public JFXComboBox<Genre> genreComboBox;
@@ -41,15 +46,19 @@ public class HomeController implements Initializable {
 
     @FXML
     public JFXButton resetBtn;
-    public List<Genre> allGenre = Genre.initializeGenre();
+/*    public List<Genre> allGenre = Genre.initializeGenre();
 
-    public List<Movie> allMovies = MovieAPI.getMovies();
-
+    public List<Movie> allMovies = MovieAPI.getMovies();*/
+    public ObservableList<Genre> allGenre = FXCollections.observableArrayList(Genre.initializeGenre()); // Typ der Liste auf Genre geändert
+//    public ObservableList<Movie> allMovies = FXCollections.observableArrayList();
+    public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
 
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        allMovies.addAll(allMovies);
         observableMovies.addAll(allMovies);         // add dummy data to observable list
 
         // initialize UI stuff
@@ -65,25 +74,30 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
         searchBtn.setOnAction(actionEvent -> {
-//            filter();
-            MovieAPI.getMovies();
+            filter();
+//            List<Movie> test = new ArrayList<>();
+//            test.addAll(MovieAPI.getMovies());
+//            MovieAPI.getMovies();
+//            for(Movie movies : test){
+//                System.out.println(movies.getTitle());
+//            }
 
 
         });
 
         resetBtn.setOnAction(actionEvent -> {
-            resetFilter();
+//            resetFilter();
         });
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
-            if (sortBtn.getText().equals("Sort (asc)")) {
-                sortBtn.setText("Sort (desc)");
-                sortasc(observableMovies);
-            } else {
-                sortBtn.setText("Sort (asc)");
-                sortdesc(observableMovies);
-            }
+//            if (sortBtn.getText().equals("Sort (asc)")) {
+//                sortBtn.setText("Sort (desc)");
+//                sortasc(observableMovies);
+//            } else {
+//                sortBtn.setText("Sort (asc)");
+//                sortdesc(observableMovies);
+//            }
         });
     }
 
