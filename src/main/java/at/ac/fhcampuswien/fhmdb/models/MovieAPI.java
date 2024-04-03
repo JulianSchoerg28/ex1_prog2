@@ -54,7 +54,7 @@ public class MovieAPI {
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://prog2.fh-campuswien.ac.at/movies?");
 
-        if (query == null&& genre == null&& releaseYear == null&&rating == null){
+        if (query == null && genre == null && releaseYear == null &&rating == null){
             return null;
         }
 

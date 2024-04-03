@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,13 +43,17 @@ public class HomeController implements Initializable {
     public JFXComboBox<Genre> genreComboBox;
 
     @FXML
+    public JFXComboBox<String> releaseYearBox;
+
+    @FXML
+    public JFXComboBox<String> ratingComboBox;
+
+    @FXML
     public JFXButton sortBtn;
 
     @FXML
     public JFXButton resetBtn;
-/*    public List<Genre> allGenre = Genre.initializeGenre();
 
-    public List<Movie> allMovies = MovieAPI.getMovies();*/
     public ObservableList<Genre> allGenre = FXCollections.observableArrayList(Genre.initializeGenre()); // Typ der Liste auf Genre geändert
     public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
 
@@ -69,16 +74,33 @@ public class HomeController implements Initializable {
         ObservableList<Genre> genreObservableList = FXCollections.observableArrayList(allGenre);
             genreComboBox.setItems(genreObservableList);
 
-        // TODO add event handlers to buttons and call the regarding methods
-        // either set event handlers in the fxml file (onAction) or add them here
+
+        releaseYearBox.setPromptText("Filter by Release Year");
+        ObservableList<String> releasYearList = FXCollections.observableArrayList();
+
+        for (Movie movie:allMovies) {
+            String year = movie.getReleaseYear();
+            if (!releasYearList.contains(year)) {
+                releasYearList.add(year);
+            }
+        }
+        Collections.sort(releasYearList);
+        Collections.reverse(releasYearList);
+        releaseYearBox.setItems(releasYearList);
+
+
+
 
         searchBtn.setOnAction(actionEvent -> {
             ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
-            String query = searchField.getText();
-            String genre = genreComboBox.getSelectionModel().getSelectedItem().toString();
 
-            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, null, null));
+            String query = searchField.getText();
+            String genre = genreComboBox.getValue().toString();
+            String releaseYear = releaseYearBox.getValue();
+            System.out.println(releaseYear);
+
+            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, null));
 
             if(movieListView != null){
                 movieListView.setItems(filteredMovieList);

@@ -29,10 +29,10 @@ public class Movie implements Comparable<Movie> {
     public List<String> getGenre() {
         return genres;
     }
-
     public List<String> getDirectors() {
         return directors;
     }
+    public String getReleaseYear() { return String.valueOf(releaseYear); }
 
     /*
     public static List<Movie> initializeMovies(List<Genre> allGenre) {
