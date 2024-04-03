@@ -57,7 +57,6 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        allMovies.addAll(allMovies);
         observableMovies.addAll(allMovies);         // add dummy data to observable list
 
         // initialize UI stuff
@@ -72,15 +71,27 @@ public class HomeController implements Initializable {
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
+
         searchBtn.setOnAction(actionEvent -> {
-//            filter();
-//          brauchte nur was zum testen
-           long i = countMoviesFrom(allMovies, "Martin Scorsese");
-            System.out.println(i);
+            ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
+
+            String query = searchField.getText();
+            String genre = genreComboBox.getSelectionModel().getSelectedItem().toString();
+
+            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, null, null));
+
+            if(movieListView != null){
+                movieListView.setItems(filteredMovieList);
+                movieListView.setCellFactory(movieListView -> new MovieCell());
+            }
+
+            observableMovies = filteredMovieList;
         });
 
+
+
         resetBtn.setOnAction(actionEvent -> {
-//            resetFilter();
+            resetFilter();
         });
 
         // Sort button example:
@@ -104,54 +115,7 @@ public class HomeController implements Initializable {
         observableMovies.setAll(sortedMovie);
     }
 
-    public void filter(){
-        Genre selectedGenre = genreComboBox.getSelectionModel().getSelectedItem();
-        String input = searchField.getText();
-        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
-        ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
-        if(selectedGenre != null){
-            newMovieList.addAll(filterGenre(selectedGenre, allMovies));
-        }else{
-            newMovieList.addAll(allMovies);
-        }
-
-        if(input != null){
-            filteredMovieList.addAll(searchbox(input, newMovieList));
-        }else{
-            filteredMovieList.addAll(newMovieList);
-        }
-
-        if(movieListView != null){
-            movieListView.setItems(filteredMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell());
-        }
-
-        observableMovies = filteredMovieList;
-    }
-
-    public Set<Movie> filterGenre(Genre selectedGenre, List<Movie> moviestosort){
-        Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : moviestosort){
-           if (movie.getGenre().contains(selectedGenre)){
-               filtertMovies.add(movie);
-           }
-        }
-        return filtertMovies;
-    }
-
-    public Set<Movie> searchbox(String input, ObservableList<Movie> moviesToFilter){
-        Set<Movie> filtertMovies = new HashSet<>();
-        for(Movie movie : moviesToFilter){
-            //Strings nur zur besseren Übersicht, kann natürlich auch direkt im if überprüft werden
-            String title = movie.getTitle().toLowerCase();
-            String description = movie.getDescription().toLowerCase();
-            if((title.contains(input.toLowerCase()) ||description.contains(input.toLowerCase()))){
-                filtertMovies.add(movie);
-            }
-        }
-        return filtertMovies;
-    }
     public void resetFilter(){
 
         if (genreComboBox != null) {
@@ -163,7 +127,7 @@ public class HomeController implements Initializable {
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
-        newMovieList.addAll(allMovies);
+        newMovieList.addAll(MovieAPI.getMovies());
 
         if(movieListView != null){
             movieListView.setItems(newMovieList);

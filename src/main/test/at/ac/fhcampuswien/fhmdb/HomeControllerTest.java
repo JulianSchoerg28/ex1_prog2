@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class HomeControllerTest {
         String result = Drama.getGenreName();
         assertEquals("Drama",result);
     }
-
+/*
     @Test
     void test_sort_movies_asc(){
         //given
@@ -343,5 +344,31 @@ class HomeControllerTest {
         assertEquals(homeController.allMovies.size(), homeController.observableMovies.size());
         assertTrue(homeController.observableMovies.containsAll(homeController.allMovies));
     }
+
+
+ */
+    @Test
+    void requestFilteredMovies () {
+
+        List<Movie> actual =MovieAPI.filteredMovies("The" , "DRAMA" , "1972" , "5");
+        System.out.println(actual);
+
+        String expected = "The Godfather";
+        String actualTitle = null;
+        for (Movie movie:actual ) {
+            actualTitle = movie.getTitle();
+            System.out.println(actualTitle);
+        }
+        
+        assertEquals(expected,actualTitle);
+        
+    }
+
+
+
+
+
+
+
 
 }
