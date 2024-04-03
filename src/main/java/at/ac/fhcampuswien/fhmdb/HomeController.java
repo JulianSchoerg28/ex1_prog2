@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
@@ -13,20 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.net.URL;
-import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import java.lang.reflect.Type;
-
-
 
 
 public class HomeController implements Initializable {
@@ -40,7 +28,7 @@ public class HomeController implements Initializable {
     public JFXListView<Movie> movieListView;
 
     @FXML
-    public JFXComboBox<Genre> genreComboBox;
+    public JFXComboBox<String> genreComboBox;
 
     @FXML
     public JFXComboBox<String> releaseYearBox;
@@ -54,9 +42,7 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton resetBtn;
 
-    public ObservableList<Genre> allGenre = FXCollections.observableArrayList(Genre.initializeGenre()); // Typ der Liste auf Genre geändert
     public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
-
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
 
@@ -69,9 +55,13 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
 
 
-        // TODO add genre filter items with genreComboBox.getItems().addAll(...)
+        String[] genreArray = {"ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY",
+                               "CRIME", "DRAMA", "DOCUMENTARY", "FAMILY", "FANTASY", "HISTORY",
+                               "HORROR", "MUSICAL", "MYSTERY", "ROMANCE", "SCIENCE_FICTION",
+                               "SPORT", "THRILLER", "WAR", "WESTERN"};
+
         genreComboBox.setPromptText("Filter by Genre");
-        ObservableList<Genre> genreObservableList = FXCollections.observableArrayList(allGenre);
+        ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
             genreComboBox.setItems(genreObservableList);
 
 
