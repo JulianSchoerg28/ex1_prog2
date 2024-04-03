@@ -34,6 +34,10 @@ public class Movie implements Comparable<Movie> {
     }
     public String getReleaseYear() { return String.valueOf(releaseYear); }
 
+    public String getRating(){
+        return String.valueOf(rating) + "/10";
+    }
+
 
 
     @Override

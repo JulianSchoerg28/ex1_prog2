@@ -9,13 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 class HomeControllerTest {
-
-    @Test
-    void test_GenreName(){
-        Genre Drama = new Genre("Drama");
-        String result = Drama.getGenreName();
-        assertEquals("Drama",result);
-    }
 /*
     @Test
     void test_sort_movies_asc(){

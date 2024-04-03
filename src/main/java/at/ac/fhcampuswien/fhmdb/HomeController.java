@@ -64,7 +64,7 @@ public class HomeController implements Initializable {
                                "SPORT", "THRILLER", "WAR", "WESTERN"};
 
         ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
-            genreComboBox.setItems(genreObservableList);
+        genreComboBox.setItems(genreObservableList);
 
 
         // initialize releaseYearBox
@@ -83,6 +83,18 @@ public class HomeController implements Initializable {
 
 
 
+        //initialize ratingComboBox
+        ratingComboBox.setPromptText("Filter by Rating");
+        ObservableList<String> ratingList = FXCollections.observableArrayList();
+
+        for (int i = 0; i <=10 ; i++) {
+            ratingList.add(String.valueOf(i));
+        }
+        ratingComboBox.setItems(ratingList);
+
+
+
+
 
         searchBtn.setOnAction(actionEvent -> {
             ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
@@ -91,8 +103,9 @@ public class HomeController implements Initializable {
             String query = searchField.getText();
             String genre = genreComboBox.getValue();
             String releaseYear = releaseYearBox.getValue();
+            String rating = ratingComboBox.getValue();
 
-            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, null));
+            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
 
             if(movieListView != null){
                 movieListView.setItems(filteredMovieList);
@@ -135,9 +148,16 @@ public class HomeController implements Initializable {
         if (genreComboBox != null) {
             genreComboBox.setValue(null);
         }
+        if (releaseYearBox != null) {
+            releaseYearBox.setValue(null);
+        }
+        if (ratingComboBox != null) {
+            ratingComboBox.setValue(null);
+        }
         if (searchField != null) {
             searchField.setText("");
         }
+
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
