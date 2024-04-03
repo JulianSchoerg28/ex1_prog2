@@ -55,16 +55,19 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
 
 
+
+        // initialize GenreComboBox
+        genreComboBox.setPromptText("Filter by Genre");
         String[] genreArray = {"ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY",
                                "CRIME", "DRAMA", "DOCUMENTARY", "FAMILY", "FANTASY", "HISTORY",
                                "HORROR", "MUSICAL", "MYSTERY", "ROMANCE", "SCIENCE_FICTION",
                                "SPORT", "THRILLER", "WAR", "WESTERN"};
 
-        genreComboBox.setPromptText("Filter by Genre");
         ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
             genreComboBox.setItems(genreObservableList);
 
 
+        // initialize releaseYearBox
         releaseYearBox.setPromptText("Filter by Release Year");
         ObservableList<String> releasYearList = FXCollections.observableArrayList();
 
@@ -86,9 +89,8 @@ public class HomeController implements Initializable {
 
 
             String query = searchField.getText();
-            String genre = genreComboBox.getValue().toString();
+            String genre = genreComboBox.getValue();
             String releaseYear = releaseYearBox.getValue();
-            System.out.println(releaseYear);
 
             filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, null));
 
