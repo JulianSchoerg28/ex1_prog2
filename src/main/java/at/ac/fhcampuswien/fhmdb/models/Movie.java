@@ -38,6 +38,10 @@ public class Movie implements Comparable<Movie> {
         return String.valueOf(rating);
     }
 
+    public List<String> getMainCast(){
+        return mainCast;
+    }
+
 
 
     @Override

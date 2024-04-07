@@ -178,8 +178,40 @@ public class HomeController implements Initializable {
         System.out.println(moviesss.size());
         return moviesss.size();
     }
-
 //    gibt die Anzahl der Filme eines bestimmten Regisseurs zurück.
+
+    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
+        List<Movie> betweenYears = movies.stream().filter(movie -> {
+                    try {
+                        int year = Integer.parseInt(movie.getReleaseYear());
+                        return year >= startYear && year <= endYear;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+        return betweenYears;
+    }
+
+
+   public int getLongestMovieTitel(List<Movie> movies) {
+       int titelLength = movies.stream()
+               .map(Movie::getTitle)
+               .max(Comparator.comparingInt(String::length))
+               .map(String::length)
+               .orElse(0);
+       return titelLength;
+    }
+
+
+
+//    String getMostPopularActor(List<Movie> movies){
+//
+//    }
+
+
+
+
 
 
 

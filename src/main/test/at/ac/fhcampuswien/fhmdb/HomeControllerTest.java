@@ -4,12 +4,11 @@ import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 class HomeControllerTest {
 
@@ -132,7 +131,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filter_ignores_empty_Sttring() {
+    void filter_ignores_empty_String() {
 
         List<Movie> expected = MovieAPI.getMovies();
         List<Movie> actual = MovieAPI.filteredMovies("", "", "", "");
@@ -152,5 +151,44 @@ class HomeControllerTest {
         assertEquals(expectedTitle, actualTitle);
     }
 
+
+    @Test
+    void get_longest_Movie_Titel_with_many_Movies(){
+        //given
+        List<Movie> movies = MovieAPI.getMovies();
+        int longestTitel = new HomeController().getLongestMovieTitel(movies);
+
+        String longestTitelfromApi = movies.stream()
+                .map(Movie::getTitle)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
+
+        assertTrue(longestTitel == longestTitelfromApi.length());
+    }
+
+    @Test
+    void get_longest_Movie_Titel_with_empty_List(){
+        List<Movie> movies = MovieAPI.getMovies();
+        int longestTitel = new HomeController().getLongestMovieTitel(movies);
+
+        if(movies.isEmpty()) {
+            assertEquals(0, longestTitel);
+        }
+    }
+    @Test
+    void get_Movies_between_two_Years(){
+        HomeController homeController = new HomeController();
+        List<Movie>movies = MovieAPI.getMovies();
+
+        int startYear = 2008;
+        int endYear = 2010;
+
+        List<Movie> filteredMovies = homeController.getMoviesBetweenYears(movies, startYear, endYear);
+        boolean match = filteredMovies.stream().allMatch(movie -> {
+            int year = Integer.parseInt(movie.getReleaseYear());
+            return year >= startYear && year <= endYear;
+        });
+        assertTrue(match);
+    }
 
 }
