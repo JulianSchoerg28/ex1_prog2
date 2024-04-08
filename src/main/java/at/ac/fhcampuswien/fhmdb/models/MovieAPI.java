@@ -18,7 +18,7 @@ public class MovieAPI {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("http://prog2.fh-campuswien.ac.at/movies")
+                .url("https://prog2.fh-campuswien.ac.at/movies")
                 .addHeader("User-Agent", "http.agent")
                 .build();
 
@@ -52,7 +52,7 @@ public class MovieAPI {
         //build the correct Url
 
         StringBuilder urlString = new StringBuilder();
-        urlString.append("http://prog2.fh-campuswien.ac.at/movies?");
+        urlString.append("https://prog2.fh-campuswien.ac.at/movies?");
 
         if (query == null && genre == null && releaseYear == null &&rating == null){
             return null;
