@@ -171,7 +171,7 @@ public class HomeController implements Initializable {
         observableMovies = newMovieList;
     }
 
-    long countMoviesFrom(List<Movie> movies, String director){
+    public long countMoviesFrom(List<Movie> movies, String director){
         List<Movie> moviesss = movies.stream().filter(movie -> movie.getDirectors().contains(director)).collect(Collectors.toList());
         //Ausgabe zu Testzwecken:
         moviesss.forEach(System.out::println);

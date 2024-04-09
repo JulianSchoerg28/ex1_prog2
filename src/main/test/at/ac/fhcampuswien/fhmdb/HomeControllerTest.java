@@ -191,4 +191,15 @@ class HomeControllerTest {
         assertTrue(match);
     }
 
+    @Test
+    void count_Movies_from_directors(){
+        List<Movie> movies = MovieAPI.getMovies();
+        HomeController homeController = new HomeController();
+        long count = homeController.countMoviesFrom(movies, "Christopher Nolan");
+        assertEquals(2, count);
+
+
+
+    }
+
 }
