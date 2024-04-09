@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -203,20 +204,16 @@ public class HomeController implements Initializable {
        return titelLength;
     }
 
-
-
-//    String getMostPopularActor(List<Movie> movies){
-//
-//    }
-
-
-
-
-
-
-
-
-
+    public String getMostPopularActor(List<Movie> movies) {
+        String mostPopular = movies.stream()
+                .flatMap(movie -> movie.getMainCast().stream())
+                .collect(Collectors.groupingBy(actor -> actor, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+        return mostPopular;
+    }
 
 }
 

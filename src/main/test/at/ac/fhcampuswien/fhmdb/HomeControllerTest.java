@@ -153,7 +153,7 @@ class HomeControllerTest {
 
 
     @Test
-    void get_longest_Movie_Titel_with_many_Movies(){
+    void getLongestMovieTitelFromMany(){
         //given
         List<Movie> movies = MovieAPI.getMovies();
         int longestTitel = new HomeController().getLongestMovieTitel(movies);
@@ -167,7 +167,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void get_longest_Movie_Titel_with_empty_List(){
+    void getLongestMovieTitelFromEmptyList(){
         List<Movie> movies = MovieAPI.getMovies();
         int longestTitel = new HomeController().getLongestMovieTitel(movies);
 
@@ -176,7 +176,7 @@ class HomeControllerTest {
         }
     }
     @Test
-    void get_Movies_between_two_Years(){
+    void getMoviesBetweenTwoYears(){
         HomeController homeController = new HomeController();
         List<Movie>movies = MovieAPI.getMovies();
 
@@ -192,14 +192,15 @@ class HomeControllerTest {
     }
 
     @Test
-    void count_Movies_from_directors(){
+    void countMoviesFromDirectors(){
         List<Movie> movies = MovieAPI.getMovies();
         HomeController homeController = new HomeController();
         long count = homeController.countMoviesFrom(movies, "Christopher Nolan");
         assertEquals(2, count);
 
-
-
     }
+
+
+
 
 }
