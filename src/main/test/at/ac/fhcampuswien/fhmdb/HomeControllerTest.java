@@ -200,6 +200,14 @@ class HomeControllerTest {
 
     }
 
+    @Test
+    void getMostPopularMovies(){
+        List<Movie> movies = MovieAPI.getMovies();
+        HomeController homeController = new HomeController();
+        String mostPopular = homeController.getMostPopularActor(movies);
+        assertNotNull(mostPopular);
+    }
+
 
 
 
