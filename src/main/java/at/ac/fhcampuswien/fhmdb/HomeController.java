@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -49,7 +48,7 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        observableMovies.addAll(allMovies);         // add dummy data to observable list
+        observableMovies.addAll(allMovies);
 
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
@@ -179,7 +178,6 @@ public class HomeController implements Initializable {
         System.out.println(moviesss.size());
         return moviesss.size();
     }
-//    gibt die Anzahl der Filme eines bestimmten Regisseurs zurück.
 
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
         List<Movie> betweenYears = movies.stream().filter(movie -> {

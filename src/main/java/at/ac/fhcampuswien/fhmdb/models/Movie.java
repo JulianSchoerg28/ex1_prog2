@@ -1,7 +1,5 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Movie implements Comparable<Movie> {
@@ -14,7 +12,6 @@ public class Movie implements Comparable<Movie> {
     private String imgUrl;
     private int lengthInMinutes;
     private List<String> directors;
-
     private List<String> writers;
     private List<String>mainCast;
     private double rating;
