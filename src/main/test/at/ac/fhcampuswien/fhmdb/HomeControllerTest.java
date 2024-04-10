@@ -93,7 +93,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterQuerry_ignores_Uppercase() {
+    void filterQuerryIgnoresUppercase() {
 
         String querry = "THE";
 
@@ -112,7 +112,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterQuerry_ignores_Space() {
+    void filterQuerryIgnoresSpace() {
 
         String querry = "the ";
 
@@ -131,7 +131,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filter_ignores_empty_String() {
+    void filterIgnoresEmptyString() {
 
         List<Movie> expected = MovieAPI.getMovies();
         List<Movie> actual = MovieAPI.filteredMovies("", "", "", "");
