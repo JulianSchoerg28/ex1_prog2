@@ -6,7 +6,7 @@ public class Movie implements Comparable<Movie> {
 
     private String id;
     private String title;
-    private List<String> genres;
+    private List<Genre> genres;
     private int releaseYear;
     private String description;
     private String imgUrl;
@@ -23,7 +23,7 @@ public class Movie implements Comparable<Movie> {
     public String getDescription() {
         return description;
     }
-    public List<String> getGenre() {
+    public List<Genre> getGenre() {
         return genres;
     }
     public List<String> getDirectors() {
@@ -44,5 +44,8 @@ public class Movie implements Comparable<Movie> {
     @Override
     public int compareTo(Movie o) {
         return this.getTitle().compareTo(o.getTitle());
+    }
+
+    public List<String> getActors() { return mainCast;
     }
 }

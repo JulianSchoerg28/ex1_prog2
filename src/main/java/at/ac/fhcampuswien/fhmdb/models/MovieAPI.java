@@ -55,7 +55,7 @@ public class MovieAPI {
         urlString.append("https://prog2.fh-campuswien.ac.at/movies?");
 
         if (query == null && genre == null && releaseYear == null &&rating == null){
-            return null;
+            return getMovies();
         }
 
         List<String> queryParams = new ArrayList<>();

@@ -84,8 +84,6 @@ class HomeControllerTest {
 
         for (Movie movie : returnValue) {
             if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                System.out.println(movie.getTitle());
-                System.out.println(movie.getDescription());
                 correct = false;
             }
         }
@@ -103,8 +101,6 @@ class HomeControllerTest {
 
         for (Movie movie : returnValue) {
             if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                System.out.println(movie.getTitle());
-                System.out.println(movie.getDescription());
                 correct = false;
             }
         }
@@ -122,8 +118,6 @@ class HomeControllerTest {
 
         for (Movie movie : returnValue) {
             if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                System.out.println(movie.getTitle());
-                System.out.println(movie.getDescription());
                 correct = false;
             }
         }
@@ -151,7 +145,6 @@ class HomeControllerTest {
 
         assertEquals(expectedTitle, actualTitle);
     }
-
 
     @Test
     void getLongestMovieTitelFromMany(){
