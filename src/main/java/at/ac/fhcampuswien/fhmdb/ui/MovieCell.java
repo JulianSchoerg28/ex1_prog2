@@ -34,7 +34,7 @@ public class MovieCell extends ListCell<Movie> {
                             : "No description available")
             );
             genre.setText(movie.getGenre().toString());
-            releaseYear.setText(movie.getReleaseYear());
+            releaseYear.setText(String.valueOf(movie.getReleaseYear()));
             rating.setText(String.valueOf(movie.getRating())  + "/10");
 
 

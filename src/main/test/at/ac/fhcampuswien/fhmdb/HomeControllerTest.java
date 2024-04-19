@@ -1,9 +1,11 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,11 +33,11 @@ class HomeControllerTest {
     @Test
     void filterGenre() {
 
-        List<Movie> returnValue = MovieAPI.filteredMovies(null, "ACTION", null, null);
+        List<Movie> returnValue = MovieAPI.filteredMovies(null, Genre.ACTION.toString(), null, null);
         Boolean correct = true;
 
         for (Movie movie : returnValue) {
-            if (!movie.getGenre().contains("ACTION")) {
+            if (!movie.getGenre().contains(Genre.ACTION)) {
                 correct = false;
             }
         }
@@ -65,7 +67,7 @@ class HomeControllerTest {
         Boolean correct = true;
 
         for (Movie movie : returnValue) {
-            if (Double.parseDouble(movie.getRating()) < 9.0) {
+            if (movie.getRating() < 9.0) {
                 correct = false;
             }
         }
@@ -179,7 +181,7 @@ class HomeControllerTest {
 
         List<Movie> filteredMovies = homeController.getMoviesBetweenYears(movies, startYear, endYear);
         boolean match = filteredMovies.stream().allMatch(movie -> {
-            int year = Integer.parseInt(movie.getReleaseYear());
+            int year = movie.getReleaseYear();
             return year >= startYear && year <= endYear;
         });
         assertTrue(match);

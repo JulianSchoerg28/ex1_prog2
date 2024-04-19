@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
@@ -72,7 +73,7 @@ public class HomeController implements Initializable {
         ObservableList<String> releasYearList = FXCollections.observableArrayList();
 
         for (Movie movie:allMovies) {
-            String year = movie.getReleaseYear();
+            String year = String.valueOf(movie.getReleaseYear());
             if (!releasYearList.contains(year)) {
                 releasYearList.add(year);
             }
@@ -183,7 +184,7 @@ public class HomeController implements Initializable {
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
         List<Movie> betweenYears = movies.stream().filter(movie -> {
                     try {
-                        int year = Integer.parseInt(movie.getReleaseYear());
+                        int year = movie.getReleaseYear();
                         return year >= startYear && year <= endYear;
                     } catch (NumberFormatException e) {
                         return false;

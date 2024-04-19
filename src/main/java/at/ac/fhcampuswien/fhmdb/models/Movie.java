@@ -17,22 +17,27 @@ public class Movie implements Comparable<Movie> {
     private double rating;
 
     //Ich glaube man braucht nur die 3 (für den HomeController)
+    public String getId() {return id;}
     public String getTitle() {
         return title;
     }
     public String getDescription() {
         return description;
     }
+    public String getImgUrl(){return imgUrl;}
+
+    public int getLengthInMinutes() {return lengthInMinutes;}
+
     public List<Genre> getGenre() {
         return genres;
     }
     public List<String> getDirectors() {
         return directors;
     }
-    public String getReleaseYear() { return String.valueOf(releaseYear); }
+    public int getReleaseYear() { return releaseYear; }
 
-    public String getRating(){
-        return String.valueOf(rating);
+    public double getRating(){
+        return rating;
     }
 
     public List<String> getMainCast(){
