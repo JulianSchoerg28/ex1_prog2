@@ -67,9 +67,9 @@ public class HomeController implements Initializable {
         // initialize GenreComboBox
         genreComboBox.setPromptText("Filter by Genre");
         String[] genreArray = {"ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY",
-                               "CRIME", "DRAMA", "DOCUMENTARY", "FAMILY", "FANTASY", "HISTORY",
-                               "HORROR", "MUSICAL", "MYSTERY", "ROMANCE", "SCIENCE_FICTION",
-                               "SPORT", "THRILLER", "WAR", "WESTERN"};
+                "CRIME", "DRAMA", "DOCUMENTARY", "FAMILY", "FANTASY", "HISTORY",
+                "HORROR", "MUSICAL", "MYSTERY", "ROMANCE", "SCIENCE_FICTION",
+                "SPORT", "THRILLER", "WAR", "WESTERN"};
 
         ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
         genreComboBox.setItems(genreObservableList);
@@ -205,14 +205,14 @@ public class HomeController implements Initializable {
     }
 
 
-   public int getLongestMovieTitel(List<Movie> movies) {
-       int titelLength = movies.stream()
-               .map(Movie::getTitle)
-               .max(Comparator.comparingInt(String::length))
-               .map(String::length)
-               .orElse(0);
-       return titelLength;
-   }
+    public int getLongestMovieTitel(List<Movie> movies) {
+        int titelLength = movies.stream()
+                .map(Movie::getTitle)
+                .max(Comparator.comparingInt(String::length))
+                .map(String::length)
+                .orElse(0);
+        return titelLength;
+    }
 
     public String getMostPopularActor(List<Movie> movies) {
         String mostPopular = movies.stream()
@@ -227,14 +227,13 @@ public class HomeController implements Initializable {
 
     public void switchToHome(){
         //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
-        //TODO: zurücksetzen von filtern usw. wenn gewechselt wird
         homeBtn.setStyle("-fx-background-color: #00FF00;");
         watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
-
+        resetFilter();
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
-                newMovieList.addAll(allMovies);
+        newMovieList.addAll(allMovies);
         if(movieListView != null){
             movieListView.setItems(newMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
@@ -247,7 +246,7 @@ public class HomeController implements Initializable {
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
-
+        resetFilter();
 
         observableMovies.clear();
     }
@@ -257,7 +256,7 @@ public class HomeController implements Initializable {
 
     }
 
-    }
+}
 
 
 
