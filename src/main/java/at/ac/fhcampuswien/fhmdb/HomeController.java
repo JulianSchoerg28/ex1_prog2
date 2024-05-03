@@ -227,9 +227,10 @@ public class HomeController implements Initializable {
 
     public void switchToHome(){
         //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
-
+        //TODO: zurücksetzen von filtern usw. wenn gewechselt wird
         homeBtn.setStyle("-fx-background-color: #00FF00;");
         watchlistBtn.setStyle("-fx-background-color: #f5c518;");
+
 
     }
 
@@ -239,6 +240,10 @@ public class HomeController implements Initializable {
 
     }
 
+
+    public static void addToWatchlist() {
+
+    }
 
     }
 
