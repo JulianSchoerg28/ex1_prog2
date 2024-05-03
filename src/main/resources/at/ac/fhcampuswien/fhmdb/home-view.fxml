@@ -9,7 +9,7 @@
 <VBox prefHeight="331.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.fhmdb.HomeController">
    <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="20.0" style="-fx-background-color: black;">
       <padding>
-         <Insets bottom="7.0" left="10.0" top="7.0" />
+         <Insets bottom="7.0" left="10.0" right="10.0" top="7.0" />
       </padding>
       <children>
          <Label style="-fx-background-color: F5C518;" text="FHMDb">
@@ -20,7 +20,14 @@
                <Insets left="2.0" right="2.0" />
             </padding>
          </Label>
-         <Label styleClass="text-white" stylesheets="@styles.css" text="Welcome to FHMDb!" />
+         <HBox HBox.hgrow="ALWAYS">
+            <padding>
+               <Insets left="2.0" right="2.0" />
+            </padding>
+            <Label styleClass="text-white" stylesheets="@styles.css" text="Welcome to FHMDb!" />
+         </HBox>
+         <JFXButton fx:id="homeBtn" onAction="#switchToHome" styleClass="background-yellow" stylesheets="@styles.css" text="Home" />
+         <JFXButton fx:id="watchlistBtn" layoutX="523.0" layoutY="19.0" onAction="#switchToWatchlist" styleClass="background-yellow" stylesheets="@styles.css" text="Watchlist" />
       </children>
    </HBox>
    <HBox spacing="5.0" styleClass="background-black" stylesheets="@styles.css">

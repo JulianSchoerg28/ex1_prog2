@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
+
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +43,12 @@ public class HomeController implements Initializable {
 
     @FXML
     public JFXButton resetBtn;
+
+    @FXML
+    public JFXButton watchlistBtn;
+
+    @FXML
+    public JFXButton homeBtn;
 
     public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
@@ -132,6 +139,9 @@ public class HomeController implements Initializable {
                 sortdesc(observableMovies);
             }
         });
+
+        homeBtn.setStyle("-fx-background-color: #00FF00;");
+
     }
 
     public void sortasc(ObservableList<Movie> observableMovies){
@@ -215,8 +225,19 @@ public class HomeController implements Initializable {
         return mostPopular;
     }
 
+    public void switchToHome(){
+        //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
 
+        homeBtn.setStyle("-fx-background-color: #00FF00;");
+        watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
+    }
+
+    public void switchToWatchlist(){
+        homeBtn.setStyle("-fx-background-color: #f5c518;");
+        watchlistBtn.setStyle("-fx-background-color: #00FF00;");
+
+    }
 
 
     }
