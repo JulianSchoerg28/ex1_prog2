@@ -232,12 +232,24 @@ public class HomeController implements Initializable {
         watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
 
+
+        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+                newMovieList.addAll(allMovies);
+        if(movieListView != null){
+            movieListView.setItems(newMovieList);
+            movieListView.setCellFactory(movieListView -> new MovieCell());
+        }
+        observableMovies = newMovieList;
+
     }
 
     public void switchToWatchlist(){
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
+
+
+        observableMovies.clear();
     }
 
 
