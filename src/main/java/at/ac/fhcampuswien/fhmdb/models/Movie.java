@@ -12,11 +12,12 @@ public class Movie implements Comparable<Movie> {
     private String imgUrl;
     private int lengthInMinutes;
     private List<String> directors;
+
     private List<String> writers;
     private List<String>mainCast;
     private double rating;
 
-    //Ich glaube man braucht nur die 3 (für den HomeController)
+
     public String getId() {return id;}
     public String getTitle() {
         return title;
