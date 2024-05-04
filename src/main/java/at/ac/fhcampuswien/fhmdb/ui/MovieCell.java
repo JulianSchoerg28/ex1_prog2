@@ -64,7 +64,10 @@ public class MovieCell extends ListCell<Movie> {
             setGraphic(layout);
 
             watchlistBtn.setOnAction(event -> {
-                HomeController.addToWatchlist();
+
+                //TODO: Hier Movie zur Watchlist hinzufügen
+                //Hilfe siehe Video ab ca 1h15min
+
             });
 
 

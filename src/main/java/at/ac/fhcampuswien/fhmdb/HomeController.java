@@ -63,7 +63,6 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
 
 
-
         // initialize GenreComboBox
         genreComboBox.setPromptText("Filter by Genre");
         String[] genreArray = {"ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY",
@@ -79,7 +78,7 @@ public class HomeController implements Initializable {
         releaseYearBox.setPromptText("Filter by Release Year");
         ObservableList<String> releasYearList = FXCollections.observableArrayList();
 
-        for (Movie movie:allMovies) {
+        for (Movie movie : allMovies) {
             String year = String.valueOf(movie.getReleaseYear());
             if (!releasYearList.contains(year)) {
                 releasYearList.add(year);
@@ -90,18 +89,14 @@ public class HomeController implements Initializable {
         releaseYearBox.setItems(releasYearList);
 
 
-
         //initialize ratingComboBox
         ratingComboBox.setPromptText("Filter by Rating");
         ObservableList<String> ratingList = FXCollections.observableArrayList();
 
-        for (int i = 0; i <=10 ; i++) {
+        for (int i = 0; i <= 10; i++) {
             ratingList.add(String.valueOf(i));
         }
         ratingComboBox.setItems(ratingList);
-
-
-
 
 
         searchBtn.setOnAction(actionEvent -> {
@@ -115,14 +110,13 @@ public class HomeController implements Initializable {
 
             filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
 
-            if(movieListView != null){
+            if (movieListView != null) {
                 movieListView.setItems(filteredMovieList);
                 movieListView.setCellFactory(movieListView -> new MovieCell());
             }
 
             observableMovies = filteredMovieList;
         });
-
 
 
         resetBtn.setOnAction(actionEvent -> {
@@ -144,17 +138,18 @@ public class HomeController implements Initializable {
 
     }
 
-    public void sortasc(ObservableList<Movie> observableMovies){
+    public void sortasc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
     }
-    public void sortdesc(ObservableList<Movie> observableMovies){
+
+    public void sortdesc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
     }
 
 
-    public void resetFilter(){
+    public void resetFilter() {
 
         if (genreComboBox != null) {
             genreComboBox.setValue(null);
@@ -174,7 +169,7 @@ public class HomeController implements Initializable {
 
         newMovieList.addAll(MovieAPI.getMovies());
 
-        if(movieListView != null){
+        if (movieListView != null) {
             movieListView.setItems(newMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
         }
@@ -182,7 +177,7 @@ public class HomeController implements Initializable {
         observableMovies = newMovieList;
     }
 
-    public long countMoviesFrom(List<Movie> movies, String director){
+    public long countMoviesFrom(List<Movie> movies, String director) {
         List<Movie> moviesss = movies.stream().filter(movie -> movie.getDirectors().contains(director)).collect(Collectors.toList());
         //Ausgabe zu Testzwecken:
         moviesss.forEach(System.out::println);
@@ -225,7 +220,7 @@ public class HomeController implements Initializable {
         return mostPopular;
     }
 
-    public void switchToHome(){
+    public void switchToHome() {
         //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
         homeBtn.setStyle("-fx-background-color: #00FF00;");
         watchlistBtn.setStyle("-fx-background-color: #f5c518;");
@@ -234,7 +229,7 @@ public class HomeController implements Initializable {
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
         newMovieList.addAll(allMovies);
-        if(movieListView != null){
+        if (movieListView != null) {
             movieListView.setItems(newMovieList);
             movieListView.setCellFactory(movieListView -> new MovieCell());
         }
@@ -242,7 +237,7 @@ public class HomeController implements Initializable {
 
     }
 
-    public void switchToWatchlist(){
+    public void switchToWatchlist() {
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
@@ -252,9 +247,6 @@ public class HomeController implements Initializable {
     }
 
 
-    public static void addToWatchlist() {
-
-    }
 
 }
 

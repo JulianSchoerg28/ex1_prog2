@@ -16,7 +16,9 @@ public class DatabaseManager {
     public static final String password = "password";
 
     private  static ConnectionSource connectionSource;
-    Dao<MovieEntity, Long> dao;
+    private Dao<MovieEntity, Long> movieDao;
+
+    private Dao<WatchlistMovieEntity, Long> watchlistDao;
 
     private static DatabaseManager instance;
 
@@ -27,17 +29,21 @@ public class DatabaseManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            dao = DaoManager.createDao(connectionSource, MovieEntity.class);
+            movieDao = DaoManager.createDao(connectionSource, MovieEntity.class);
+            watchlistDao = DaoManager.createDao(connectionSource, WatchlistMovieEntity.class);
             createTables();
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }
 
-    public void testDB() throws SQLException {
-        MovieEntity movie = new MovieEntity("145", "test", "asdasdsa", "genree", 2024, "www.asdsa.at", 120, 3);
-        dao.create(movie);
+    public Dao<MovieEntity, Long> getMovieDao() {
+        return this.movieDao;
     }
+    public Dao<WatchlistMovieEntity, Long> getWatchlistDao(){
+        return this.watchlistDao;
+    }
+
 
     public static DatabaseManager getDatabase(){
         if(instance == null){
@@ -56,6 +62,7 @@ public class DatabaseManager {
 //        JdbcConnectionSource source = new JdbcConnectionSource(DB_URL, user, password);
         connectionSource = new JdbcConnectionSource(DB_URL, user, password);
     }
+
 
 
 }

@@ -42,7 +42,9 @@ public class MovieEntity {
         this.rating = rating;
     }
 
-    public String genresToString(List<Genre> genres){
+
+
+    public static String genresToString(List<Genre> genres){
         StringBuilder genreString = new StringBuilder();
         for (Genre genre:genres) {
             genreString.append(genre + ",");
