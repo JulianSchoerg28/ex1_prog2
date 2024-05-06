@@ -32,10 +32,19 @@ public class DatabaseManager {
             movieDao = DaoManager.createDao(connectionSource, MovieEntity.class);
             watchlistDao = DaoManager.createDao(connectionSource, WatchlistMovieEntity.class);
             createTables();
-        }catch (SQLException e){
+        }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
+
+    public void testdb() throws SQLException {
+        WatchlistMovieEntity testmovie = new WatchlistMovieEntity("1234");
+        watchlistDao.create(testmovie);
+    }
+
+
+
+
 
     public Dao<MovieEntity, Long> getMovieDao() {
         return this.movieDao;
@@ -48,12 +57,16 @@ public class DatabaseManager {
     public static DatabaseManager getDatabase(){
         if(instance == null){
             instance = new DatabaseManager();
+            System.out.println("new instance");
         }
         return instance;
     }
 
     private static void createTables() throws SQLException{
+        System.out.println("making Tables");
+
         TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, WatchlistMovieEntity.class);
     }
 
     private static void createConnectionSource() throws SQLException {
@@ -62,6 +75,7 @@ public class DatabaseManager {
 //        JdbcConnectionSource source = new JdbcConnectionSource(DB_URL, user, password);
         connectionSource = new JdbcConnectionSource(DB_URL, user, password);
     }
+
 
 
 

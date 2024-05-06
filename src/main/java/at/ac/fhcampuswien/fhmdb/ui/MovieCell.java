@@ -1,7 +1,11 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
+import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
+import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
+import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.HomeController;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import com.j256.ormlite.dao.Dao;
 import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -12,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.sql.SQLException;
+
 public class MovieCell extends ListCell<Movie> {
     private final Label title = new Label();
     private final Label detail = new Label();
@@ -21,6 +27,8 @@ public class MovieCell extends ListCell<Movie> {
 
     private final JFXButton watchlistBtn = new JFXButton("Add to Watchlist");
     private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, watchlistBtn);
+
+    WatchlistRepository watchlist = new WatchlistRepository();
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -64,6 +72,11 @@ public class MovieCell extends ListCell<Movie> {
             setGraphic(layout);
 
             watchlistBtn.setOnAction(event -> {
+                try {
+                    watchlist.addToWatchlist(getItem());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
 
                 //TODO: Hier Movie zur Watchlist hinzufügen
                 //Hilfe siehe Video ab ca 1h15min

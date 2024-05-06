@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.Database.MovieRepository;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
@@ -242,6 +243,7 @@ public class HomeController implements Initializable {
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
         resetFilter();
+
 
         observableMovies.clear();
     }
