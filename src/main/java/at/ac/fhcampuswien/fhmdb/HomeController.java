@@ -1,5 +1,8 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
+import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
@@ -8,6 +11,7 @@ import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -270,8 +274,35 @@ public class HomeController implements Initializable {
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
         resetFilter();
-
         observableMovies.clear();
+
+        try {
+            ObservableList<Movie> watchlist = FXCollections.observableArrayList();
+            WatchlistRepository repository = new WatchlistRepository();
+            List<WatchlistMovieEntity> watlistEntity = repository.getWatchlist();
+
+            for (WatchlistMovieEntity entity: watlistEntity ) {
+                Movie wantedmovie;
+
+                wantedmovie = allMovies.stream()
+                        .filter(movie -> Objects.equals(movie.getId(), entity.getApiID()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (wantedmovie != null){
+                    watchlist.add(wantedmovie);
+                }
+            }
+            if (movieListView != null) {
+                movieListView.setItems(watchlist);
+                movieListView.setCellFactory(movieListView -> new MovieCell());
+            }
+
+            observableMovies = watchlist;
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
