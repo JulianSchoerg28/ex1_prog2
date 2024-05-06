@@ -74,7 +74,4 @@ public class DatabaseManager {
 //        JdbcConnectionSource source = new JdbcConnectionSource(DB_URL, user, password);
         connectionSource = new JdbcConnectionSource(DB_URL, user, password);
     }
-
-
-
 }

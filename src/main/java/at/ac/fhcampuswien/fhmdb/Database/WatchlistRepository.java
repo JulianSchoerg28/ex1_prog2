@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 public class WatchlistRepository {
 
@@ -27,8 +28,13 @@ public class WatchlistRepository {
 
     //TODO: die funktion soll ein int zurück geben? was soll sie da zurückgeben?
     public void removeFromWatchlist(Movie movie) throws DatabaseException {
-        try {
-            dao.delete(MovieToWatchlistMovieEntity(movie));
+        try{
+            for (WatchlistMovieEntity entity: dao) {
+            if (Objects.equals(entity.getApiID(), movie.getId())){
+                dao.deleteById(entity.id);
+            }
+        }
+
         }catch (SQLException e){
             throw new DatabaseException("Failed to delete movie", e);
         }

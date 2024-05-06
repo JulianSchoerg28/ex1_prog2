@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class MovieCell extends ListCell<Movie> {
     private final Label title = new Label();
@@ -26,8 +27,11 @@ public class MovieCell extends ListCell<Movie> {
     private final Label releaseYear = new Label();
     private final Label rating = new Label();
 
-    private final JFXButton watchlistBtn = new JFXButton("Add to Watchlist");
+    private final JFXButton watchlistBtn = new JFXButton();
     private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, watchlistBtn);
+
+
+
 
 
 
@@ -70,21 +74,48 @@ public class MovieCell extends ListCell<Movie> {
 
             watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
-            setGraphic(layout);
 
-            watchlistBtn.setOnAction(event -> {
-                try {
-                    WatchlistRepository watchlist = new WatchlistRepository();
-                    watchlist.addToWatchlist(getItem());
+            try {
+                WatchlistRepository repository = new WatchlistRepository();
+                List<WatchlistMovieEntity> watchlistEntity = repository.getWatchlist();
 
-                } catch (DatabaseException e) {
-                    throw new RuntimeException(e);
+                if (watchlistEntity.stream().anyMatch(movieEntity -> movie.getId().equals(movieEntity.getApiID()))){
+                    watchlistBtn.setText("remove");
+                    watchlistBtn.setOnAction(event -> {
+                        try {
+                            WatchlistRepository watchlist = new WatchlistRepository();
+                            watchlist.removeFromWatchlist(getItem());
+
+                        } catch (DatabaseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+                }else{
+                    watchlistBtn.setText("add to Watchlist");
+                    watchlistBtn.setOnAction(event -> {
+                        try {
+                            WatchlistRepository watchlist = new WatchlistRepository();
+                            watchlist.addToWatchlist(getItem());
+
+                        } catch (DatabaseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
 
-                //TODO: Hier Movie zur Watchlist hinzufügen
-                //Hilfe siehe Video ab ca 1h15min
 
-            });
+
+            }catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
+
+            setGraphic(layout);
+
+
+
+
+
 
 
         }
