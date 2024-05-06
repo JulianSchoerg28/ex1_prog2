@@ -48,6 +48,7 @@ public class MovieAPI {
         return movies;
     }
 
+
     public static List<Movie> filteredMovies(String query, String genre, String releaseYear, String rating) throws MovieApiException{
 
         //build the correct Url
