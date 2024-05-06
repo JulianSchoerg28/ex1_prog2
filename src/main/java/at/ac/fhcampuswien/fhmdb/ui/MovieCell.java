@@ -4,6 +4,7 @@ import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.HomeController;
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.j256.ormlite.dao.Dao;
 import com.jfoenix.controls.JFXButton;
@@ -28,7 +29,7 @@ public class MovieCell extends ListCell<Movie> {
     private final JFXButton watchlistBtn = new JFXButton("Add to Watchlist");
     private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, watchlistBtn);
 
-    WatchlistRepository watchlist = new WatchlistRepository();
+
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -73,8 +74,10 @@ public class MovieCell extends ListCell<Movie> {
 
             watchlistBtn.setOnAction(event -> {
                 try {
+                    WatchlistRepository watchlist = new WatchlistRepository();
                     watchlist.addToWatchlist(getItem());
-                } catch (SQLException e) {
+
+                } catch (DatabaseException e) {
                     throw new RuntimeException(e);
                 }
 

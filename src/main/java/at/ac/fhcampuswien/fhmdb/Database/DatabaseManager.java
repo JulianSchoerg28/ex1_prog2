@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.Database;
 
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -35,6 +36,17 @@ public class DatabaseManager {
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+    public void testdb (){
+        try {
+            WatchlistMovieEntity movie = new WatchlistMovieEntity("1245");
+            watchlistDao.create(movie);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {

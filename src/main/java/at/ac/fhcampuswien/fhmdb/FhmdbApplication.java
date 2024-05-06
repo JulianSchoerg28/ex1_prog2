@@ -4,6 +4,7 @@ import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
 import at.ac.fhcampuswien.fhmdb.Database.MovieEntity;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,23 +26,20 @@ public class FhmdbApplication extends Application {
         stage.show();
 
 
-        try {
-            DatabaseManager.getDatabase().testdb();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        DatabaseManager.getDatabase().testdb();
 
-        WatchlistRepository watchlist = new WatchlistRepository();
+
         try {
+
+            WatchlistRepository watchlist = new WatchlistRepository();
             List<WatchlistMovieEntity> watchmovies = watchlist.getWatchlist();
+
             for (WatchlistMovieEntity movie: watchmovies){
                 System.out.println("id: " + movie.getId() + "  apiID: " + movie.getApiID());
             }
-        } catch (SQLException e) {
+        } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
-
-
 
 
     }
