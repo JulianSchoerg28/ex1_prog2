@@ -25,21 +25,18 @@ public class FhmdbApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-
-        DatabaseManager.getDatabase().testdb();
-
-
-        try {
-
-            WatchlistRepository watchlist = new WatchlistRepository();
-            List<WatchlistMovieEntity> watchmovies = watchlist.getWatchlist();
-
-            for (WatchlistMovieEntity movie: watchmovies){
-                System.out.println("id: " + movie.getId() + "  apiID: " + movie.getApiID());
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+//          //testing Database
+//        try {
+//            DatabaseManager.getDatabase().testdb();
+//            WatchlistRepository watchlist = new WatchlistRepository();
+//            List<WatchlistMovieEntity> watchmovies = watchlist.getWatchlist();
+//
+//            for (WatchlistMovieEntity movie: watchmovies){
+//                System.out.println("id: " + movie.getId() + "  apiID: " + movie.getApiID());
+//            }
+//        } catch (DatabaseException e) {
+//            throw new RuntimeException(e);
+//        }
 
 
     }

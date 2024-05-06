@@ -279,20 +279,29 @@ public class HomeController implements Initializable {
         try {
             ObservableList<Movie> watchlist = FXCollections.observableArrayList();
             WatchlistRepository repository = new WatchlistRepository();
-            List<WatchlistMovieEntity> watlistEntity = repository.getWatchlist();
+            List<WatchlistMovieEntity> watchlistEntity = repository.getWatchlist();
 
-            for (WatchlistMovieEntity entity: watlistEntity ) {
+            //sieve out duplicates
+            List<WatchlistMovieEntity> distinctentity = watchlistEntity.stream()
+                    .distinct()
+                    .toList();
+
+
+            for (WatchlistMovieEntity entity: distinctentity ) {
                 Movie wantedmovie;
 
+                //find corresponding movie objects to ApiId
                 wantedmovie = allMovies.stream()
                         .filter(movie -> Objects.equals(movie.getId(), entity.getApiID()))
                         .findFirst()
                         .orElse(null);
 
+                //add found movie to List
                 if (wantedmovie != null){
                     watchlist.add(wantedmovie);
                 }
             }
+
             if (movieListView != null) {
                 movieListView.setItems(watchlist);
                 movieListView.setCellFactory(movieListView -> new MovieCell());
