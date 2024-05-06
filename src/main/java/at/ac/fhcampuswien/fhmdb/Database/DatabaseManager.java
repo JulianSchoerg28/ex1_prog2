@@ -66,6 +66,8 @@ public class DatabaseManager {
 
     private static void createTables() throws SQLException{
         TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, WatchlistMovieEntity.class);
+
     }
 
     private static void createConnectionSource() throws SQLException {
