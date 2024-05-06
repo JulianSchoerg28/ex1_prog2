@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.Database;
 
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.j256.ormlite.dao.Dao;
 
@@ -10,17 +11,25 @@ public class MovieRepository {
 
     Dao<MovieEntity, Long> dao;
 
-    public MovieRepository() {
+    public MovieRepository() throws DatabaseException {
         this.dao = DatabaseManager.getDatabase().getMovieDao();
     }
 
-    List<MovieEntity> getAllMovies() throws SQLException {
-        return dao.queryForAll();
+    List<MovieEntity> getAllMovies() throws DatabaseException {
+        try{
+            return dao.queryForAll();
+        }catch (SQLException e){
+            throw new DatabaseException("Couldn't get all movies from database", e);
+        }
     }
 
     //TODO: die funktion soll ein int zurück geben? was soll sie da zurückgeben?
-    public void removeAll() throws SQLException {
-        dao.deleteBuilder().delete();
+    public void removeAll() throws DatabaseException {
+        try {
+            dao.deleteBuilder().delete();
+        }catch (SQLException e){
+            throw new DatabaseException("Failed to delete all movies", e);
+        }
     }
 
     //TODO: Was soll die Funktion können? Wenn sie einen movie holen soll, dann braucht sie doch movie als Parameter was laut Angabe nicht der Fall ist?

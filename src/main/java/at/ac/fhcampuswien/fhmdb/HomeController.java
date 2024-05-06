@@ -1,6 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.Database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 
@@ -51,12 +52,29 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton homeBtn;
 
-    public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
+    public List<Movie> allMovies = new ArrayList<>();
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
+    private List<Movie> loadAllMovies() {
+        try {
+            return MovieAPI.getMovies();
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+            return new ArrayList<>();  // Leere Liste bei Fehlern
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        allMovies = loadAllMovies();
+
+        try {
+            allMovies = new ArrayList<>(MovieAPI.getMovies());
+            observableMovies.addAll(allMovies);
+        }catch (MovieApiException e){
+            showAlert("Error", "Unable to load movies from API" +e.getMessage());
+            observableMovies.clear();
+        }
         observableMovies.addAll(allMovies);         // add dummy data to observable list
 
         // initialize UI stuff
@@ -109,7 +127,11 @@ public class HomeController implements Initializable {
             String releaseYear = releaseYearBox.getValue();
             String rating = ratingComboBox.getValue();
 
-            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+            try{
+                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+            }catch (MovieApiException e){
+                showAlert("Error", "Failed to filer movies from API" +e.getMessage());
+            }
 
             if (movieListView != null) {
                 movieListView.setItems(filteredMovieList);
@@ -168,7 +190,12 @@ public class HomeController implements Initializable {
 
         ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
 
-        newMovieList.addAll(MovieAPI.getMovies());
+        try {
+            newMovieList.addAll(MovieAPI.getMovies());
+        }catch(MovieApiException e){
+            showAlert("Error", "Unable to load movies from API" + e.getMessage());
+            newMovieList.clear();
+        }
 
         if (movieListView != null) {
             movieListView.setItems(newMovieList);
@@ -244,8 +271,13 @@ public class HomeController implements Initializable {
 
         resetFilter();
 
-
         observableMovies.clear();
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 
