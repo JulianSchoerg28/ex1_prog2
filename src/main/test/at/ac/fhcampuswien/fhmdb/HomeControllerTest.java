@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
@@ -16,7 +17,7 @@ class HomeControllerTest {
 
 
     @Test
-    void requestFilteredMovies() {
+    void requestFilteredMovies() throws MovieApiException {
 
         List<Movie> actual = MovieAPI.filteredMovies("The", "DRAMA", "1972", "5");
 
@@ -31,7 +32,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterGenre() {
+    void filterGenre() throws MovieApiException {
 
         List<Movie> returnValue = MovieAPI.filteredMovies(null, Genre.ACTION.toString(), null, null);
         Boolean correct = true;
@@ -46,7 +47,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterYear() {
+    void filterYear() throws MovieApiException {
 
         List<Movie> returnValue = MovieAPI.filteredMovies(null, null, "2008", null);
         Boolean correct = true;
@@ -61,7 +62,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterRating() {
+    void filterRating() throws MovieApiException {
 
         List<Movie> returnValue = MovieAPI.filteredMovies(null, null, null, "9");
         Boolean correct = true;
@@ -77,7 +78,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterQuerry() {
+    void filterQuerry() throws MovieApiException {
 
         String querry = "the";
 
@@ -94,7 +95,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterQuerryIgnoresUppercase() {
+    void filterQuerryIgnoresUppercase() throws MovieApiException {
 
         String querry = "THE";
 
@@ -111,7 +112,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterQuerryIgnoresSpace() {
+    void filterQuerryIgnoresSpace() throws MovieApiException {
 
         String querry = "the ";
 
@@ -128,7 +129,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void filterIgnoresEmptyString() {
+    void filterIgnoresEmptyString() throws MovieApiException {
 
         List<Movie> expected = MovieAPI.getMovies();
         List<Movie> actual = MovieAPI.filteredMovies("", "", "", "");
@@ -149,7 +150,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void getLongestMovieTitelFromMany(){
+    void getLongestMovieTitelFromMany() throws MovieApiException {
         //given
         List<Movie> movies = MovieAPI.getMovies();
         int longestTitel = new HomeController().getLongestMovieTitel(movies);
@@ -163,7 +164,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void getLongestMovieTitelFromEmptyList(){
+    void getLongestMovieTitelFromEmptyList() throws MovieApiException {
         List<Movie> movies = MovieAPI.getMovies();
         int longestTitel = new HomeController().getLongestMovieTitel(movies);
 
@@ -172,7 +173,7 @@ class HomeControllerTest {
         }
     }
     @Test
-    void getMoviesBetweenTwoYears(){
+    void getMoviesBetweenTwoYears() throws MovieApiException {
         HomeController homeController = new HomeController();
         List<Movie>movies = MovieAPI.getMovies();
 
@@ -188,7 +189,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void countMoviesFromDirectors(){
+    void countMoviesFromDirectors() throws MovieApiException {
         List<Movie> movies = MovieAPI.getMovies();
         HomeController homeController = new HomeController();
         long count = homeController.countMoviesFrom(movies, "Christopher Nolan");
@@ -197,12 +198,13 @@ class HomeControllerTest {
     }
 
     @Test
-    void getMostPopularMovies(){
+    void getMostPopularMovies() throws MovieApiException {
         List<Movie> movies = MovieAPI.getMovies();
         HomeController homeController = new HomeController();
         String mostPopular = homeController.getMostPopularActor(movies);
         assertNotNull(mostPopular);
     }
+
 
 
 

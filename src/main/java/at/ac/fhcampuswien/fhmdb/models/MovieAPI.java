@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
 import at.ac.fhcampuswien.fhmdb.HomeController;
+import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
@@ -14,7 +15,7 @@ import java.util.List;
 public class MovieAPI {
 
 
-    public static List<Movie> getMovies() {
+    public static List<Movie> getMovies() throws MovieApiException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -27,7 +28,7 @@ public class MovieAPI {
             Response response = client.newCall(request).execute();
 
             if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
+                throw new MovieApiException("Unexpected code " + response);
             }
 
             String responseData = response.body().string();
@@ -41,13 +42,13 @@ public class MovieAPI {
 
             response.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MovieApiException("Error with getting movies", e);
         }
 
         return movies;
     }
 
-    public static List<Movie> filteredMovies(String query, String genre, String releaseYear, String rating){
+    public static List<Movie> filteredMovies(String query, String genre, String releaseYear, String rating) throws MovieApiException {
 
         //build the correct Url
 

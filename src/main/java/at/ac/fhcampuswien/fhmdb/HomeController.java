@@ -1,5 +1,7 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
+import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
@@ -11,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 
@@ -50,12 +53,31 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton homeBtn;
 
-    public List<Movie> allMovies = new ArrayList<>(MovieAPI.getMovies());
+
+
+
+    public List<Movie> allMovies;
+
+    {
+        try {
+            allMovies = new ArrayList<>(MovieAPI.getMovies());
+        } catch (MovieApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            movieListView.getItems().setAll(MovieAPI.getMovies());
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+            movieListView.getItems().setAll(Collections.emptyList());
+        }
+
         observableMovies.addAll(allMovies);         // add dummy data to observable list
 
         // initialize UI stuff
@@ -108,7 +130,11 @@ public class HomeController implements Initializable {
             String releaseYear = releaseYearBox.getValue();
             String rating = ratingComboBox.getValue();
 
-            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+            try {
+                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+            } catch (MovieApiException e) {
+                throw new RuntimeException(e);
+            }
 
             if (movieListView != null) {
                 movieListView.setItems(filteredMovieList);
@@ -120,7 +146,11 @@ public class HomeController implements Initializable {
 
 
         resetBtn.setOnAction(actionEvent -> {
-            resetFilter();
+            try {
+                resetFilter();
+            } catch (MovieApiException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         // Sort button example:
@@ -149,7 +179,7 @@ public class HomeController implements Initializable {
     }
 
 
-    public void resetFilter() {
+    public void resetFilter() throws MovieApiException {
 
         if (genreComboBox != null) {
             genreComboBox.setValue(null);
@@ -220,7 +250,7 @@ public class HomeController implements Initializable {
         return mostPopular;
     }
 
-    public void switchToHome() {
+    public void switchToHome() throws MovieApiException {
         //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
         homeBtn.setStyle("-fx-background-color: #00FF00;");
         watchlistBtn.setStyle("-fx-background-color: #f5c518;");
@@ -237,7 +267,7 @@ public class HomeController implements Initializable {
 
     }
 
-    public void switchToWatchlist() {
+    public void switchToWatchlist() throws MovieApiException {
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
@@ -246,6 +276,12 @@ public class HomeController implements Initializable {
         observableMovies.clear();
     }
 
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 
 }
