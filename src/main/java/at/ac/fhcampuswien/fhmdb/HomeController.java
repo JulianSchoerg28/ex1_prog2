@@ -1,8 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.Database.*;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
@@ -58,6 +56,7 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton homeBtn;
 
+    public  List<MovieEntity> database = new ArrayList<>();
     public List<Movie> allMovies = new ArrayList<>();
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
     public WatchlistRepository watchlistRepository;
@@ -111,6 +110,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
         movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
 
         try {
@@ -121,25 +121,24 @@ public class HomeController implements Initializable {
         }
 
         movieListView.setCellFactory(listView -> new MovieCell(onAddToWatchlistClicked));
-        allMovies = loadAllMovies();
 
         try {
-            allMovies = new ArrayList<>(MovieAPI.getMovies());
-            observableMovies.addAll(allMovies);
-        } catch (MovieApiException e) {
+            allMovies = getMoviesfromDB();
+            if (!allMovies.isEmpty()){
+                updateDB(allMovies);
+            }
+
+        } catch (Exception e) {
             showAlert("Error", "Unable to load movies from API" + e.getMessage());
-            observableMovies.clear();
-        }
+            try {
+                allMovies = getMoviesfromDB();
+            } catch (DatabaseException ex) {
+                showAlert("Error", "unable to Load Database" + ex.getMessage());
+            }
 
-        try {
-            setupDatabase();
-        } catch (DatabaseException e) {
-            showAlert("Database Error", "Could not connect to database: " + e.getMessage());
-            // Weiterhin die UI initialisieren, aber möglicherweise mit eingeschränkter Funktionalität
         }finally {
 
-
-            observableMovies.addAll(allMovies);         // add dummy data to observable list
+            observableMovies.addAll(allMovies);
 
             // initialize UI stuff
             movieListView.setItems(observableMovies);   // set data of observable list to list view
@@ -152,6 +151,30 @@ public class HomeController implements Initializable {
             setupUIListeners();
         }
     }
+
+    private List<Movie> getMoviesfromDB () throws DatabaseException {
+        List<Movie> movies = new ArrayList<>();
+        MovieRepository repository = new MovieRepository();
+        movies = repository.MovieEntityToMovie(repository.getAllMovies());
+
+//        Movie test = new Movie("1234", "test" , new ArrayList<>(), 1500, "Bla Bla Bla", "mmmmmmmmh", 120, 8);
+//        movies.add(test);
+
+        return movies;
+    }
+
+    private void updateDB (List<Movie> movies) {
+        MovieRepository repository = null;
+        try {
+            repository = new MovieRepository();
+            repository.addAllMovies(movies);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
     private void initializeGenreComboBox() {
 

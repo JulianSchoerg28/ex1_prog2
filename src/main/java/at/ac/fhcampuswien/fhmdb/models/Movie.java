@@ -46,6 +46,19 @@ public class Movie implements Comparable<Movie> {
     }
 
 
+    public Movie(String id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, double rating) {
+        this.id = id;
+        this.title = title;
+        this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.directors = null;
+        this.writers = null;
+        this.mainCast = null;
+        this.rating = rating;
+    }
 
     @Override
     public int compareTo(Movie o) {
