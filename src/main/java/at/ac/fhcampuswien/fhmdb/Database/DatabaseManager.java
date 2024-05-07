@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 
 public class DatabaseManager {
-    public static final String DB_URL = "jdbc:h2:file: ./db/movdb";
+    public static final String DB_URL = "jdbc:h2:file: ./db/moviedb";
 
     public static final String user = "user";
     public static final String password = "password";
@@ -46,7 +46,6 @@ public class DatabaseManager {
             throw new DatabaseException("Failed to add test data",e);
         }
 
-
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {
@@ -74,9 +73,6 @@ public class DatabaseManager {
     }
 
     private static void createConnectionSource() throws DatabaseException {
-
-        //Prof hatte es so wie auskommentiert, ging allerdings nicht :(
-//        JdbcConnectionSource source = new JdbcConnectionSource(DB_URL, user, password);
         try {
             connectionSource = new JdbcConnectionSource(DB_URL, user, password);
         } catch (SQLException e) {

@@ -1,24 +1,16 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
-import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.HomeController;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
-import com.j256.ormlite.dao.Dao;
 import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class MovieCell extends ListCell<Movie> {
     private final Label title = new Label();
@@ -27,8 +19,28 @@ public class MovieCell extends ListCell<Movie> {
     private final Label releaseYear = new Label();
     private final Label rating = new Label();
 
-    private final JFXButton watchlistBtn = new JFXButton();
-    private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, watchlistBtn);
+    private final JFXButton addWatchlistBtn = new JFXButton();
+//    private Button watchlistBtn = new Button();
+private ClickEventHandler<Movie> addToWatchlistClicked;
+
+
+    private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, addWatchlistBtn);
+
+    public MovieCell(ClickEventHandler<Movie> addToWatchlistClicked) {
+        super();
+        this.addToWatchlistClicked = addToWatchlistClicked;
+        addWatchlistBtn.setStyle("-fx-background-color: #f5c518;");
+        addWatchlistBtn.setOnMouseClicked(mouseEvent -> {
+            Movie item = getItem();
+            if (item != null) {
+                try {
+                    addToWatchlistClicked.onClick(item);
+                } catch (DatabaseException e) {
+                    new HomeController().showAlert("sda", "asd"+ e.getMessage());
+                }
+            }
+        });
+    }
 
 
 
@@ -72,58 +84,48 @@ public class MovieCell extends ListCell<Movie> {
             layout.spacingProperty().set(10);
             layout.alignmentProperty().set(javafx.geometry.Pos.CENTER_LEFT);
 
-            watchlistBtn.setStyle("-fx-background-color: #f5c518;");
+            addWatchlistBtn.setStyle("-fx-background-color: #f5c518;");
+            addWatchlistBtn.setText("add to Watchlist");
 
 
-            try {
-                WatchlistRepository repository = new WatchlistRepository();
-                List<WatchlistMovieEntity> watchlistEntity = repository.getWatchlist();
-
-                if (watchlistEntity.stream().anyMatch(movieEntity -> movie.getId().equals(movieEntity.getApiID()))){
-                    watchlistBtn.setText("remove");
-                    watchlistBtn.setOnAction(event -> {
-                        try {
-                            WatchlistRepository watchlist = new WatchlistRepository();
-                            watchlist.removeFromWatchlist(getItem());
-
-                        } catch (DatabaseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-
-                }else{
-                    watchlistBtn.setText("add to Watchlist");
-                    watchlistBtn.setOnAction(event -> {
-                        try {
-                            WatchlistRepository watchlist = new WatchlistRepository();
-                            watchlist.addToWatchlist(getItem());
-
-                        } catch (DatabaseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-
-
-
-            }catch (DatabaseException e) {
-                throw new RuntimeException(e);
-            }
+////
+//            try {
+//                WatchlistRepository repository = new WatchlistRepository();
+//                List<WatchlistMovieEntity> watchlistEntity = repository.getWatchlist();
+//
+//                if (watchlistEntity.stream().anyMatch(movieEntity -> movie.getId().equals(movieEntity.getApiID()))){
+//                    watchlistBtn.setText("remove");
+//                    watchlistBtn.setOnAction(event -> {
+//                        try {
+//                            WatchlistRepository watchlist = new WatchlistRepository();
+//                            watchlist.removeFromWatchlist(getItem());
+//
+//                        } catch (DatabaseException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    });
+//
+//                }else{
+//                    watchlistBtn.setText("add to Watchlist");
+//                    watchlistBtn.setOnAction(event -> {
+//                        try {
+//                            WatchlistRepository watchlist = new WatchlistRepository();
+//                            watchlist.addToWatchlist(getItem());
+//
+//                        } catch (DatabaseException e) {
+//                        }
+//                    });
+//                }
+//
+//
+//            }catch (DatabaseException e) {
+//                throw new RuntimeException(e);
+//            }
 
             setGraphic(layout);
 
 
-
-
-
-
-
         }
-    }
-
-    //TODO: Text von button ändern oder notfalls 2 buttons und jeweils nur einen anzeigen(sollte leichter sein)
-    private void updateWatchlistButtons() {
-
     }
 }
 
