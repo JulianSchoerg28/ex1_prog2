@@ -6,6 +6,7 @@ import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
+import at.ac.fhcampuswien.fhmdb.ui.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -58,11 +59,66 @@ public class HomeController implements Initializable {
     public  List<MovieEntity> database = new ArrayList<>();
     public List<Movie> allMovies = new ArrayList<>();
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    public WatchlistRepository watchlistRepository;
 
+
+    private List<Movie> loadAllMovies() {
+        try {
+            return MovieAPI.getMovies();
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    private void setupDatabase() throws DatabaseException {
+        DatabaseManager.getDatabase(); // Hier werden die Verbindung und die Tabellen erstellt
+    }
+
+    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
+        WatchlistRepository watchlistRepository = new WatchlistRepository();
+        try {
+            Movie movie = (Movie) clickedItem;
+            if (watchlistRepository.isInWatchlist(movie)) {
+                watchlistRepository.removeFromWatchlist(movie);
+            } else {
+                watchlistRepository.addToWatchlist(movie);
+            }
+        }catch(ClassCastException cce){
+            throw new DatabaseException(cce.getMessage(), cce.getCause());
+        }
+    };
+
+//    private final ClickEventHandler<Movie> onAddToWatchlistClicked = movie -> {
+//        System.out.println("Watchlist");
+//        if (movie != null) {
+//            try {
+//                if (watchlistRepository.isInWatchlist(movie)) {
+//                    watchlistRepository.removeFromWatchlist(movie);
+//                } else {
+//                    watchlistRepository.addToWatchlist(movie);
+//
+//                }
+//            } catch (DatabaseException e) {
+//                showAlert("Database Error", "Failed to update watchlist: " + e.getMessage());
+//            }
+//        }
+//    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
+        movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
+
+        try {
+            watchlistRepository = new WatchlistRepository();
+            System.out.println("WatchlistRepository initialized successfully.");
+        } catch (DatabaseException e) {
+            showAlert("dfs","sdasd"+e.getMessage());
+        }
+
+        movieListView.setCellFactory(listView -> new MovieCell(onAddToWatchlistClicked));
 
         try {
             allMovies = MovieAPI.getMovies();
@@ -75,7 +131,7 @@ public class HomeController implements Initializable {
             try {
                 allMovies = getMoviesfromDB();
             } catch (DatabaseException ex) {
-                throw new RuntimeException(ex);
+                showAlert("Error", "unable to Load Database" + ex.getMessage());
             }
 
         }finally {
@@ -84,7 +140,7 @@ public class HomeController implements Initializable {
 
             // initialize UI stuff
             movieListView.setItems(observableMovies);   // set data of observable list to list view
-            movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
 
             initializeGenreComboBox();
             initializeReleaseYearBox();
@@ -183,7 +239,7 @@ public class HomeController implements Initializable {
 
         if (movieListView != null) {
             movieListView.setItems(filteredMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell());
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
         }
 
         observableMovies = filteredMovieList;

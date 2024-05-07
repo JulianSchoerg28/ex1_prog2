@@ -55,6 +55,10 @@ public class WatchlistRepository {
             throw new DatabaseException("Failed to get watchlist from database", e);
         }
     }
+    public boolean isInWatchlist(Movie movie) throws DatabaseException {
+        List<WatchlistMovieEntity> watchlist = getWatchlist();
+        return watchlist.stream().anyMatch(entity -> entity.getApiID().equals(movie.getId()));
+    }
 
 
 
