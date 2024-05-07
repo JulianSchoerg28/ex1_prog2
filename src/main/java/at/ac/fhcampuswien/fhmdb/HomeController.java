@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
@@ -64,8 +65,12 @@ public class HomeController implements Initializable {
             return MovieAPI.getMovies();
         } catch (MovieApiException e) {
             showAlert("Error", "Unable to load movies from API: " + e.getMessage());
-            return new ArrayList<>();  // Leere Liste bei Fehlern
+            return new ArrayList<>();
         }
+    }
+
+    private void setupDatabase() throws DatabaseException {
+        DatabaseManager.getDatabase(); // Hier werden die Verbindung und die Tabellen erstellt
     }
 
     @Override
@@ -75,16 +80,34 @@ public class HomeController implements Initializable {
         try {
             allMovies = new ArrayList<>(MovieAPI.getMovies());
             observableMovies.addAll(allMovies);
-        }catch (MovieApiException e){
-            showAlert("Error", "Unable to load movies from API" +e.getMessage());
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API" + e.getMessage());
             observableMovies.clear();
         }
-        observableMovies.addAll(allMovies);         // add dummy data to observable list
 
-        // initialize UI stuff
-        movieListView.setItems(observableMovies);   // set data of observable list to list view
-        movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
+        try {
+            setupDatabase();
+        } catch (DatabaseException e) {
+            showAlert("Database Error", "Could not connect to database: " + e.getMessage());
+            // Weiterhin die UI initialisieren, aber möglicherweise mit eingeschränkter Funktionalität
+        }finally {
 
+
+            observableMovies.addAll(allMovies);         // add dummy data to observable list
+
+            // initialize UI stuff
+            movieListView.setItems(observableMovies);   // set data of observable list to list view
+            movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
+
+            initializeGenreComboBox();
+            initializeReleaseYearBox();
+            initializeRatingComboBox();
+
+            setupUIListeners();
+        }
+    }
+
+    private void initializeGenreComboBox() {
 
         // initialize GenreComboBox
         genreComboBox.setPromptText("Filter by Genre");
@@ -95,8 +118,9 @@ public class HomeController implements Initializable {
 
         ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
         genreComboBox.setItems(genreObservableList);
+    }
 
-
+    private void initializeReleaseYearBox() {
         // initialize releaseYearBox
         releaseYearBox.setPromptText("Filter by Release Year");
         ObservableList<String> releasYearList = FXCollections.observableArrayList();
@@ -110,7 +134,9 @@ public class HomeController implements Initializable {
         Collections.sort(releasYearList);
         Collections.reverse(releasYearList);
         releaseYearBox.setItems(releasYearList);
+    }
 
+    private void initializeRatingComboBox() {
 
         //initialize ratingComboBox
         ratingComboBox.setPromptText("Filter by Rating");
@@ -120,50 +146,90 @@ public class HomeController implements Initializable {
             ratingList.add(String.valueOf(i));
         }
         ratingComboBox.setItems(ratingList);
+    }
+
+    private void setupUIListeners() {
+        searchBtn.setOnAction(actionEvent -> performSearch());
+        resetBtn.setOnAction(actionEvent -> resetFilter());
+        sortBtn.setOnAction(actionEvent -> toggleSortOrder());
+
+    }
+
+    private void performSearch() {
+        ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
 
-        searchBtn.setOnAction(actionEvent -> {
-            ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
+        String query = searchField.getText();
+        String genre = genreComboBox.getValue();
+        String releaseYear = releaseYearBox.getValue();
+        String rating = ratingComboBox.getValue();
 
+        try {
+            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+        } catch (MovieApiException e) {
+            showAlert("Error", "Failed to filer movies from API" + e.getMessage());
+        }
 
-            String query = searchField.getText();
-            String genre = genreComboBox.getValue();
-            String releaseYear = releaseYearBox.getValue();
-            String rating = ratingComboBox.getValue();
+        if (movieListView != null) {
+            movieListView.setItems(filteredMovieList);
+            movieListView.setCellFactory(movieListView -> new MovieCell());
+        }
 
-            try{
-                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
-            }catch (MovieApiException e){
-                showAlert("Error", "Failed to filer movies from API" +e.getMessage());
-            }
+        observableMovies = filteredMovieList;
 
-            if (movieListView != null) {
-                movieListView.setItems(filteredMovieList);
-                movieListView.setCellFactory(movieListView -> new MovieCell());
-            }
-
-            observableMovies = filteredMovieList;
-        });
-
-
-        resetBtn.setOnAction(actionEvent -> {
-            resetFilter();
-        });
-
-        // Sort button example:
-        sortBtn.setOnAction(actionEvent -> {
-            if (sortBtn.getText().equals("Sort (asc)")) {
+}
+    private void toggleSortOrder() {
+        if (sortBtn.getText().equals("Sort (asc)")) {
                 sortBtn.setText("Sort (desc)");
                 sortasc(observableMovies);
             } else {
                 sortBtn.setText("Sort (asc)");
                 sortdesc(observableMovies);
             }
-        });
-
-        homeBtn.setStyle("-fx-background-color: #00FF00;");
-
     }
+
+//        searchBtn.setOnAction(actionEvent -> {
+//            ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
+//
+//
+//            String query = searchField.getText();
+//            String genre = genreComboBox.getValue();
+//            String releaseYear = releaseYearBox.getValue();
+//            String rating = ratingComboBox.getValue();
+//
+//            try{
+//                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+//            }catch (MovieApiException e){
+//                showAlert("Error", "Failed to filer movies from API" +e.getMessage());
+//            }
+//
+//            if (movieListView != null) {
+//                movieListView.setItems(filteredMovieList);
+//                movieListView.setCellFactory(movieListView -> new MovieCell());
+//            }
+//
+//            observableMovies = filteredMovieList;
+//        });
+//
+//
+//        resetBtn.setOnAction(actionEvent -> {
+//            resetFilter();
+//        });
+//
+//        // Sort button example:
+//        sortBtn.setOnAction(actionEvent -> {
+//            if (sortBtn.getText().equals("Sort (asc)")) {
+//                sortBtn.setText("Sort (desc)");
+//                sortasc(observableMovies);
+//            } else {
+//                sortBtn.setText("Sort (asc)");
+//                sortdesc(observableMovies);
+//            }
+//        });
+//
+//        homeBtn.setStyle("-fx-background-color: #00FF00;");
+//
+//    }
 
     public void sortasc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
@@ -274,6 +340,7 @@ public class HomeController implements Initializable {
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
         resetFilter();
+
         observableMovies.clear();
 
         try {
@@ -309,7 +376,7 @@ public class HomeController implements Initializable {
 
             observableMovies = watchlist;
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            showAlert("Database Error", "Unable to access watchlist" + e.getMessage());
         }
 
     }

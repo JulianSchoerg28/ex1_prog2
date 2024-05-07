@@ -37,9 +37,13 @@ public class MovieRepository {
         return null;
     }
 
-    public void addAllMovies(List<Movie> movies) throws SQLException {
+    public void addAllMovies(List<Movie> movies) throws DatabaseException {
         for(Movie movie : movies){
-            dao.create(MovieToMovieEntity(movie));
+            try {
+                dao.create(MovieToMovieEntity(movie));
+            } catch (SQLException e) {
+                throw new DatabaseException("Failed to add all movies",e);
+            }
         }
 
     }

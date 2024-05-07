@@ -13,7 +13,11 @@ public class WatchlistRepository {
     Dao<WatchlistMovieEntity, Long> dao;
 
     public WatchlistRepository() throws DatabaseException {
-        this.dao = DatabaseManager.getDatabase().getWatchlistDao();
+        try {
+            this.dao = DatabaseManager.getDatabase().getWatchlistDao();
+        } catch (RuntimeException e) {
+            throw new DatabaseException("Failed to initialise watchlist repository", e);
+        }
     }
 
 
@@ -30,10 +34,10 @@ public class WatchlistRepository {
     public void removeFromWatchlist(Movie movie) throws DatabaseException {
         try{
             for (WatchlistMovieEntity entity: dao) {
-            if (Objects.equals(entity.getApiID(), movie.getId())){
-                dao.deleteById(entity.id);
+                if (Objects.equals(entity.getApiID(), movie.getId())) {
+                    dao.deleteById(entity.id);
+                }
             }
-        }
 
         }catch (SQLException e){
             throw new DatabaseException("Failed to delete movie", e);
