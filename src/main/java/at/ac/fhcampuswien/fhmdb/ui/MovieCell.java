@@ -29,12 +29,12 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
     public MovieCell(ClickEventHandler<Movie> addToWatchlistClicked) {
         super();
         this.addToWatchlistClicked = addToWatchlistClicked;
-        addWatchlistBtn.setStyle("-fx-background-color: #f5c518;");
         addWatchlistBtn.setOnMouseClicked(mouseEvent -> {
             Movie item = getItem();
             if (item != null) {
                 try {
                     addToWatchlistClicked.onClick(item);
+                    updateButton();
                 } catch (DatabaseException e) {
                     new HomeController().showAlert("sda", "asd"+ e.getMessage());
                 }
@@ -42,14 +42,19 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
         });
     }
 
-
-
-
+    private void updateButton(){
+        if(addWatchlistBtn.getText().equals("add to Watchlist")){
+            addWatchlistBtn.setText("remove from Watchlist");
+        }else{
+            addWatchlistBtn.setText("add to Watchlist");
+        }
+    }
 
 
     @Override
-    protected void updateItem(Movie movie, boolean empty) {
+    protected void updateItem(Movie movie, boolean empty){
         super.updateItem(movie, empty);
+
 
         if (empty || movie == null) {
             setText(null);
@@ -84,8 +89,14 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
             layout.spacingProperty().set(10);
             layout.alignmentProperty().set(javafx.geometry.Pos.CENTER_LEFT);
 
+
             addWatchlistBtn.setStyle("-fx-background-color: #f5c518;");
-            addWatchlistBtn.setText("add to Watchlist");
+            if(HomeController.isHomeScreen()){
+                addWatchlistBtn.setText("add to Watchlist");
+            }else{
+                addWatchlistBtn.setText("remove from Watchlist");
+            }
+
 
 
 ////

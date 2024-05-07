@@ -61,6 +61,7 @@ public class HomeController implements Initializable {
     public List<Movie> allMovies = new ArrayList<>();
     public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
     public WatchlistRepository watchlistRepository;
+    private static boolean homeScreen = true;
 
 
     private List<Movie> loadAllMovies() {
@@ -82,6 +83,7 @@ public class HomeController implements Initializable {
             Movie movie = (Movie) clickedItem;
             if (watchlistRepository.isInWatchlist(movie)) {
                 watchlistRepository.removeFromWatchlist(movie);
+                switchToWatchlist();
             } else {
                 watchlistRepository.addToWatchlist(movie);
             }
@@ -363,23 +365,27 @@ public class HomeController implements Initializable {
     }
 
     public void switchToHome() {
-        //falls wir dieses unkreative Farbe wechseln durch ein vernünftiges Menü ersetzen: es ist noch einmal die farbe bei initialize oben :D
-        homeBtn.setStyle("-fx-background-color: #00FF00;");
-        watchlistBtn.setStyle("-fx-background-color: #f5c518;");
+        try {
+            homeScreen = true;
+            homeBtn.setStyle("-fx-background-color: #00FF00;");
+            watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
-        resetFilter();
-
-        ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
-        newMovieList.addAll(allMovies);
-        if (movieListView != null) {
-            movieListView.setItems(newMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
+            resetFilter();
+            ObservableList<Movie> newMovieList = FXCollections.observableArrayList();
+            newMovieList.addAll(allMovies);
+            if (movieListView != null) {
+                movieListView.setItems(newMovieList);
+                movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
+            }
+            observableMovies = newMovieList;
+        } catch (Exception e) {
+            showAlert("Error","Error!");
         }
-        observableMovies = newMovieList;
-
     }
 
+
     public void switchToWatchlist() {
+        homeScreen = false;
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
@@ -419,8 +425,11 @@ public class HomeController implements Initializable {
             }
 
             observableMovies = watchlist;
+
         } catch (DatabaseException e) {
             showAlert("Database Error", "Unable to access watchlist" + e.getMessage());
+        }catch (Exception e){
+            showAlert("Error","Error!");
         }
 
     }
@@ -431,7 +440,9 @@ public class HomeController implements Initializable {
         alert.showAndWait();
     }
 
-
+    public static boolean isHomeScreen() {
+        return homeScreen;
+    }
 
 }
 
