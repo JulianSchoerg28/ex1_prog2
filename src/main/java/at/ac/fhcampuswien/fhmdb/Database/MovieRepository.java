@@ -69,7 +69,7 @@ public class MovieRepository {
     public List<Movie> MovieEntityToMovie (List<MovieEntity> entities){
         List<Movie> movies = new ArrayList<>();
         for (MovieEntity entity : entities){
-            Movie movie = new Movie(entity.getApiId(), entity.getTitle(),genresToList(entity.getGenres()), entity.getReleaseYear(), entity.getDescription(), entity.getImgURL(), entity.getLengthInMinutes(), entity.getRating());
+            Movie movie = new Movie(entity.getApiId(), entity.getTitle(),genresToList(entity.getGenres().trim()), entity.getReleaseYear(), entity.getDescription(), entity.getImgURL(), entity.getLengthInMinutes(), entity.getRating());
             movies.add(movie);
         }
         return movies;
@@ -77,12 +77,16 @@ public class MovieRepository {
 
     public static List<Genre> genresToList (String genres){
         List<Genre> genresList = new ArrayList<>();
-        for (String s : genres.split(",")){
-            genresList.add(Genre.valueOf(s));
+        for (String s : genres.split(",")) {
+            try {
+                genresList.add(Genre.valueOf(s.trim().toUpperCase())); // trim and convert to upper case for flexibility
+            } catch (IllegalArgumentException e) {
+                System.err.println("Warning: Invalid genre \"" + s + "\" will be ignored.");
+                // Log the error or handle it as necessary
+            }
         }
         return genresList;
     }
-
 
 
 

@@ -121,12 +121,12 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(listView -> new MovieCell(onAddToWatchlistClicked));
 
         try {
-            allMovies = MovieAPI.getMovies();
+            allMovies = getMoviesfromDB();
             if (!allMovies.isEmpty()){
                 updateDB(allMovies);
             }
 
-        } catch (MovieApiException e) {
+        } catch (Exception e) {
             showAlert("Error", "Unable to load movies from API" + e.getMessage());
             try {
                 allMovies = getMoviesfromDB();
@@ -151,14 +151,14 @@ public class HomeController implements Initializable {
     }
 
     private List<Movie> getMoviesfromDB () throws DatabaseException {
-    List<Movie> movies = new ArrayList<>();
-    MovieRepository repository = new MovieRepository();
-    movies = repository.MovieEntityToMovie(repository.getAllMovies());
+        List<Movie> movies = new ArrayList<>();
+        MovieRepository repository = new MovieRepository();
+        movies = repository.MovieEntityToMovie(repository.getAllMovies());
 
-//    Movie test = new Movie("1234", "test" , new ArrayList<>(), 1500, "Bla Bla Bla", "mmmmmmmmh", 120, 8);
-//    movies.add(test);
+//        Movie test = new Movie("1234", "test" , new ArrayList<>(), 1500, "Bla Bla Bla", "mmmmmmmmh", 120, 8);
+//        movies.add(test);
 
-    return movies;
+        return movies;
     }
 
     private void updateDB (List<Movie> movies) {
@@ -336,7 +336,7 @@ public class HomeController implements Initializable {
 
         if (movieListView != null) {
             movieListView.setItems(newMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell());
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
         }
 
         observableMovies = newMovieList;
@@ -396,7 +396,7 @@ public class HomeController implements Initializable {
         newMovieList.addAll(allMovies);
         if (movieListView != null) {
             movieListView.setItems(newMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell());
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
         }
         observableMovies = newMovieList;
 
@@ -438,7 +438,7 @@ public class HomeController implements Initializable {
 
             if (movieListView != null) {
                 movieListView.setItems(watchlist);
-                movieListView.setCellFactory(movieListView -> new MovieCell());
+                movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
             }
 
             observableMovies = watchlist;
@@ -447,7 +447,7 @@ public class HomeController implements Initializable {
         }
 
     }
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
