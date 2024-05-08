@@ -20,7 +20,7 @@ public class MovieCell extends ListCell<Movie> {
     private final Label rating = new Label();
 
     private final JFXButton addWatchlistBtn = new JFXButton();
-//    private Button watchlistBtn = new Button();
+
 private ClickEventHandler<Movie> addToWatchlistClicked;
 
 
@@ -36,7 +36,7 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
                     addToWatchlistClicked.onClick(item);
                     updateButton();
                 } catch (DatabaseException e) {
-                    new HomeController().showAlert("sda", "asd"+ e.getMessage());
+                    new HomeController().showAlert("Watchlist Error", "Failed to update watchlist: "+ e.getMessage());
                 }
             }
         });
@@ -49,7 +49,6 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
             addWatchlistBtn.setText("add to Watchlist");
         }
     }
-
 
     @Override
     protected void updateItem(Movie movie, boolean empty){
@@ -97,41 +96,6 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
                 addWatchlistBtn.setText("remove from Watchlist");
             }
 
-
-
-////
-//            try {
-//                WatchlistRepository repository = new WatchlistRepository();
-//                List<WatchlistMovieEntity> watchlistEntity = repository.getWatchlist();
-//
-//                if (watchlistEntity.stream().anyMatch(movieEntity -> movie.getId().equals(movieEntity.getApiID()))){
-//                    watchlistBtn.setText("remove");
-//                    watchlistBtn.setOnAction(event -> {
-//                        try {
-//                            WatchlistRepository watchlist = new WatchlistRepository();
-//                            watchlist.removeFromWatchlist(getItem());
-//
-//                        } catch (DatabaseException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    });
-//
-//                }else{
-//                    watchlistBtn.setText("add to Watchlist");
-//                    watchlistBtn.setOnAction(event -> {
-//                        try {
-//                            WatchlistRepository watchlist = new WatchlistRepository();
-//                            watchlist.addToWatchlist(getItem());
-//
-//                        } catch (DatabaseException e) {
-//                        }
-//                    });
-//                }
-//
-//
-//            }catch (DatabaseException e) {
-//                throw new RuntimeException(e);
-//            }
 
             setGraphic(layout);
 

@@ -64,50 +64,6 @@ public class HomeController implements Initializable {
     private static boolean homeScreen = true;
 
 
-    private List<Movie> loadAllMovies() {
-        try {
-            return MovieAPI.getMovies();
-        } catch (MovieApiException e) {
-            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
-            return new ArrayList<>();
-        }
-    }
-
-    private void setupDatabase() throws DatabaseException {
-        DatabaseManager.getDatabase(); // Hier werden die Verbindung und die Tabellen erstellt
-    }
-
-    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
-        WatchlistRepository watchlistRepository = new WatchlistRepository();
-        try {
-            Movie movie = (Movie) clickedItem;
-            if (watchlistRepository.isInWatchlist(movie)) {
-                watchlistRepository.removeFromWatchlist(movie);
-                switchToWatchlist();
-            } else {
-                watchlistRepository.addToWatchlist(movie);
-            }
-        }catch(ClassCastException cce){
-            throw new DatabaseException(cce.getMessage(), cce.getCause());
-        }
-    };
-
-//    private final ClickEventHandler<Movie> onAddToWatchlistClicked = movie -> {
-//        System.out.println("Watchlist");
-//        if (movie != null) {
-//            try {
-//                if (watchlistRepository.isInWatchlist(movie)) {
-//                    watchlistRepository.removeFromWatchlist(movie);
-//                } else {
-//                    watchlistRepository.addToWatchlist(movie);
-//
-//                }
-//            } catch (DatabaseException e) {
-//                showAlert("Database Error", "Failed to update watchlist: " + e.getMessage());
-//            }
-//        }
-//    };
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -234,48 +190,7 @@ public class HomeController implements Initializable {
             }
     }
 
-//        searchBtn.setOnAction(actionEvent -> {
-//            ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
-//
-//
-//            String query = searchField.getText();
-//            String genre = genreComboBox.getValue();
-//            String releaseYear = releaseYearBox.getValue();
-//            String rating = ratingComboBox.getValue();
-//
-//            try{
-//                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
-//            }catch (MovieApiException e){
-//                showAlert("Error", "Failed to filer movies from API" +e.getMessage());
-//            }
-//
-//            if (movieListView != null) {
-//                movieListView.setItems(filteredMovieList);
-//                movieListView.setCellFactory(movieListView -> new MovieCell());
-//            }
-//
-//            observableMovies = filteredMovieList;
-//        });
-//
-//
-//        resetBtn.setOnAction(actionEvent -> {
-//            resetFilter();
-//        });
-//
-//        // Sort button example:
-//        sortBtn.setOnAction(actionEvent -> {
-//            if (sortBtn.getText().equals("Sort (asc)")) {
-//                sortBtn.setText("Sort (desc)");
-//                sortasc(observableMovies);
-//            } else {
-//                sortBtn.setText("Sort (asc)");
-//                sortdesc(observableMovies);
-//            }
-//        });
-//
-//        homeBtn.setStyle("-fx-background-color: #00FF00;");
-//
-//    }
+
 
     public void sortasc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
@@ -383,7 +298,6 @@ public class HomeController implements Initializable {
         }
     }
 
-
     public void switchToWatchlist() {
         homeScreen = false;
         homeBtn.setStyle("-fx-background-color: #f5c518;");
@@ -443,6 +357,34 @@ public class HomeController implements Initializable {
     public static boolean isHomeScreen() {
         return homeScreen;
     }
+    private List<Movie> loadAllMovies() {
+        try {
+            return MovieAPI.getMovies();
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+
+    private void setupDatabase() throws DatabaseException {
+        DatabaseManager.getDatabase();
+    }
+
+    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
+        WatchlistRepository watchlistRepository = new WatchlistRepository();
+        try {
+            Movie movie = (Movie) clickedItem;
+            if (watchlistRepository.isInWatchlist(movie)) {
+                watchlistRepository.removeFromWatchlist(movie);
+                switchToWatchlist();
+            } else {
+                watchlistRepository.addToWatchlist(movie);
+            }
+        }catch(ClassCastException cce){
+            throw new DatabaseException(cce.getMessage(), cce.getCause());
+        }
+    };
 
 }
 
