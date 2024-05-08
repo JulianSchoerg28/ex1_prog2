@@ -73,23 +73,23 @@ public class HomeController implements Initializable {
             watchlistRepository = new WatchlistRepository();
             System.out.println("WatchlistRepository initialized successfully.");
         } catch (DatabaseException e) {
-            showAlert("dfs","sdasd"+e.getMessage());
+            showAlert("Database Error","Failed to initialize the watchlist: "+e.getMessage());
         }
 
         movieListView.setCellFactory(listView -> new MovieCell(onAddToWatchlistClicked));
 
         try {
-            allMovies = getMoviesfromDB();
+            allMovies = MovieAPI.getMovies();
             if (!allMovies.isEmpty()){
                 updateDB(allMovies);
             }
 
-        } catch (Exception e) {
-            showAlert("Error", "Unable to load movies from API" + e.getMessage());
+        } catch (MovieApiException e) {
+            showAlert("MovieAPI Error", "Unable to load movies from API: " + e.getMessage());
             try {
                 allMovies = getMoviesfromDB();
             } catch (DatabaseException ex) {
-                showAlert("Error", "unable to Load Database" + ex.getMessage());
+                showAlert("Database Error", "Failed to update movies in database: " + ex.getMessage());
             }
 
         }finally {
@@ -125,7 +125,7 @@ public class HomeController implements Initializable {
             repository = new MovieRepository();
             repository.addAllMovies(movies);
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            showAlert("Database Error", "Failed to update Database: "+ e.getMessage());
         }
     }
 
@@ -193,7 +193,7 @@ public class HomeController implements Initializable {
         try {
             filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
         } catch (MovieApiException e) {
-            showAlert("Error", "Failed to filer movies from API" + e.getMessage());
+            showAlert("Error", "Failed to filer movies from API: " + e.getMessage());
         }
 
         if (movieListView != null) {
