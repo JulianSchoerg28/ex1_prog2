@@ -20,8 +20,6 @@ public class WatchlistRepository {
         }
     }
 
-
-    //TODO: die funktion soll ein int zurück geben? was soll sie da zurückgeben?
     public void addToWatchlist(Movie movie) throws DatabaseException{
         try {
             dao.create(MovieToWatchlistMovieEntity(movie));
@@ -30,7 +28,6 @@ public class WatchlistRepository {
         }
     }
 
-    //TODO: die funktion soll ein int zurück geben? was soll sie da zurückgeben?
     public void removeFromWatchlist(Movie movie) throws DatabaseException {
         try{
             for (WatchlistMovieEntity entity: dao) {
@@ -57,6 +54,7 @@ public class WatchlistRepository {
             throw new DatabaseException("Failed to get watchlist from database, Dao is null", e);
         }
     }
+
     public boolean isInWatchlist(Movie movie) throws DatabaseException {
         try{
             List<WatchlistMovieEntity> watchlist = getWatchlist();
@@ -64,9 +62,5 @@ public class WatchlistRepository {
         }catch (DatabaseException e){
             throw new DatabaseException("Failed to get Watchlist", e);
         }
-
     }
-
-
-
 }

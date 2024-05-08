@@ -69,7 +69,6 @@ public class HomeController implements Initializable {
 
 
         movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
-
         try {
             watchlistRepository = new WatchlistRepository();
             System.out.println("WatchlistRepository initialized successfully.");
@@ -401,14 +400,13 @@ public class HomeController implements Initializable {
         resetBtn.setDisable(maybe);
     }
 
-    private void setupDatabase() throws DatabaseException {
+/*    private void setupDatabase() throws DatabaseException {
         try {
             DatabaseManager.getDatabase();
         }catch (DatabaseException e){
             throw new DatabaseException("Could not get Database", e.getCause());
         }
-
-    }
+    }*/
 
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
         WatchlistRepository watchlistRepository = new WatchlistRepository();

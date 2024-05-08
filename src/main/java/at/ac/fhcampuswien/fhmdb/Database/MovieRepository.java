@@ -33,18 +33,12 @@ public class MovieRepository {
         }
     }
 
-    //TODO: die funktion soll ein int zurück geben? was soll sie da zurückgeben?
     public void removeAll() throws DatabaseException {
         try {
             dao.deleteBuilder().delete();
         }catch (SQLException e){
             throw new DatabaseException("Failed to delete all movies", e);
         }
-    }
-
-    //TODO: Was soll die Funktion können? Wenn sie einen movie holen soll, dann braucht sie doch movie als Parameter was laut Angabe nicht der Fall ist?
-    public MovieEntity getMovie(Movie movie){
-        return null;
     }
 
     public void addAllMovies(List<Movie> movies) throws DatabaseException {
@@ -64,7 +58,6 @@ public class MovieRepository {
         } catch (SQLException e) {
             throw new DatabaseException("Failed to add all movies",e);
         }
-
     }
 
     public MovieEntity MovieToMovieEntity(Movie movie){

@@ -23,7 +23,6 @@ public class WatchlistMovieEntity {
         return apiID;
     }
 
-
     public WatchlistMovieEntity(){}
 
     public WatchlistMovieEntity(String apiID) {
@@ -44,6 +43,5 @@ public class WatchlistMovieEntity {
     public int hashCode() {
         return apiID != null ? apiID.hashCode() : 0;
     }
-
 
 }
