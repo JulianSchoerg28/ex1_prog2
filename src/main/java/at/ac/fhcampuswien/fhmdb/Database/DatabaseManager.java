@@ -34,7 +34,7 @@ public class DatabaseManager {
             watchlistDao = DaoManager.createDao(connectionSource, WatchlistMovieEntity.class);
             createTables();
         }catch (SQLException e){
-            throw new DatabaseException("Datanasse initialisation failed", e);
+            throw new DatabaseException("Database initialisation failed", e);
         }
     }
     public void testdb () throws DatabaseException{
