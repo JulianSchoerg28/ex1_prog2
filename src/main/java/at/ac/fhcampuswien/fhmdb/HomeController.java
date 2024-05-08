@@ -122,6 +122,7 @@ public class HomeController implements Initializable {
         genreComboBox.setItems(genreObservableList);
     }
 
+
     private void initializeReleaseYearBox() {
         // initialize releaseYearBox
         releaseYearBox.setPromptText("Filter by Release Year");
