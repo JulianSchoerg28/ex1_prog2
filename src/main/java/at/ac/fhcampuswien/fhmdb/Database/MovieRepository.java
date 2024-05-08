@@ -16,7 +16,11 @@ public class MovieRepository {
     Dao<MovieEntity, Long> dao;
 
     public MovieRepository() throws DatabaseException {
-        this.dao = DatabaseManager.getDatabase().getMovieDao();
+        try {
+            this.dao = DatabaseManager.getDatabase().getMovieDao();
+        }catch (Exception e){
+            throw new DatabaseException("Could not get database", e);
+        }
     }
 
     public List<MovieEntity> getAllMovies() throws DatabaseException {
@@ -24,6 +28,8 @@ public class MovieRepository {
             return dao.queryForAll();
         }catch (SQLException e){
             throw new DatabaseException("Couldn't get all movies from database", e);
+        }catch (NullPointerException e){
+            throw new DatabaseException("Dao is null", e);
         }
     }
 

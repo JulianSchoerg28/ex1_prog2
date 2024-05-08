@@ -31,9 +31,11 @@ public class DatabaseManager {
                 throw new DatabaseException("abc", e);
             }
             movieDao = DaoManager.createDao(connectionSource, MovieEntity.class);
+
             watchlistDao = DaoManager.createDao(connectionSource, WatchlistMovieEntity.class);
+
             createTables();
-        }catch (SQLException e){
+        }catch (Exception e){
             throw new DatabaseException("Database initialisation failed", e);
         }
     }
@@ -55,12 +57,16 @@ public class DatabaseManager {
         return this.watchlistDao;
     }
 
-
     public static DatabaseManager getDatabase() throws DatabaseException {
-        if(instance == null){
-            instance = new DatabaseManager();
+        try{
+            if(instance == null){
+                instance = new DatabaseManager();
+            }
+            return instance;
+        }catch (Exception e){
+            throw new DatabaseException("unable to get database",e);
         }
-        return instance;
+
     }
 
     private static void createTables() throws DatabaseException {

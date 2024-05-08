@@ -402,7 +402,12 @@ public class HomeController implements Initializable {
     }
 
     private void setupDatabase() throws DatabaseException {
-        DatabaseManager.getDatabase();
+        try {
+            DatabaseManager.getDatabase();
+        }catch (DatabaseException e){
+            throw new DatabaseException("Could not get Database", e.getCause());
+        }
+
     }
 
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
@@ -418,6 +423,8 @@ public class HomeController implements Initializable {
             }
         }catch(ClassCastException cce){
             throw new DatabaseException(cce.getMessage(), cce.getCause());
+        }catch (DatabaseException e){
+            throw new DatabaseException(e.getMessage(), e.getCause());
         }
     };
 }

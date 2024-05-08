@@ -15,7 +15,7 @@ public class WatchlistRepository {
     public WatchlistRepository() throws DatabaseException {
         try {
             this.dao = DatabaseManager.getDatabase().getWatchlistDao();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new DatabaseException("Failed to initialise watchlist repository", e);
         }
     }
@@ -53,11 +53,18 @@ public class WatchlistRepository {
             return dao.queryForAll();
         } catch (SQLException e) {
             throw new DatabaseException("Failed to get watchlist from database", e);
+        }catch (NullPointerException e){
+            throw new DatabaseException("Failed to get watchlist from database, Dao is null", e);
         }
     }
     public boolean isInWatchlist(Movie movie) throws DatabaseException {
-        List<WatchlistMovieEntity> watchlist = getWatchlist();
-        return watchlist.stream().anyMatch(entity -> entity.getApiID().equals(movie.getId()));
+        try{
+            List<WatchlistMovieEntity> watchlist = getWatchlist();
+            return watchlist.stream().anyMatch(entity -> entity.getApiID().equals(movie.getId()));
+        }catch (DatabaseException e){
+            throw new DatabaseException("Failed to get Watchlist", e);
+        }
+
     }
 
 
