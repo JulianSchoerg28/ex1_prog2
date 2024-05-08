@@ -409,11 +409,9 @@ public class HomeController implements Initializable {
         WatchlistRepository watchlistRepository = new WatchlistRepository();
         try {
             Movie movie = (Movie) clickedItem;
-            if (watchlistRepository.isInWatchlist(movie)) {
+            if (watchlistRepository.isInWatchlist(movie) && !homeScreen) {
                 watchlistRepository.removeFromWatchlist(movie);
-                if(!homeScreen){
-                    switchToWatchlist();
-                }
+                switchToWatchlist();
 
             } else {
                 watchlistRepository.addToWatchlist(movie);
