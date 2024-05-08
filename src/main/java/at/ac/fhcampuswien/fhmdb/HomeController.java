@@ -319,6 +319,7 @@ public class HomeController implements Initializable {
                     .toList();
 
 
+
             for (WatchlistMovieEntity entity: distinctentity ) {
                 Movie wantedmovie;
 
