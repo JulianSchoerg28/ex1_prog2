@@ -34,20 +34,11 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
             if (item != null) {
                 try {
                     addToWatchlistClicked.onClick(item);
-                    updateButton();
                 } catch (DatabaseException e) {
                     new HomeController().showAlert("Watchlist Error", "Failed to update watchlist: "+ e.getMessage());
                 }
             }
         });
-    }
-
-    private void updateButton(){
-        if(addWatchlistBtn.getText().equals("add to Watchlist")){
-            addWatchlistBtn.setText("remove from Watchlist");
-        }else{
-            addWatchlistBtn.setText("add to Watchlist");
-        }
     }
 
     @Override

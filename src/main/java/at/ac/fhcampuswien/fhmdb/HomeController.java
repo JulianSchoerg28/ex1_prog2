@@ -106,6 +106,8 @@ public class HomeController implements Initializable {
             initializeRatingComboBox();
 
             setupUIListeners();
+
+            homeBtn.setStyle("-fx-background-color: #00FF00");
         }
     }
 
@@ -113,9 +115,6 @@ public class HomeController implements Initializable {
         List<Movie> movies = new ArrayList<>();
         MovieRepository repository = new MovieRepository();
         movies = repository.MovieEntityToMovie(repository.getAllMovies());
-
-//        Movie test = new Movie("1234", "test" , new ArrayList<>(), 1500, "Bla Bla Bla", "mmmmmmmmh", 120, 8);
-//        movies.add(test);
 
         return movies;
     }
@@ -129,9 +128,6 @@ public class HomeController implements Initializable {
             showAlert("Database Error", "Failed to update Database: "+ e.getMessage());
         }
     }
-
-
-
 
     private void initializeGenreComboBox() {
 
@@ -332,7 +328,6 @@ public class HomeController implements Initializable {
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
 
-
         resetFilter();
 
         observableMovies.clear();
@@ -346,7 +341,6 @@ public class HomeController implements Initializable {
             List<WatchlistMovieEntity> distinctentity = watchlistEntity.stream()
                     .distinct()
                     .toList();
-
 
 
             for (WatchlistMovieEntity entity: distinctentity ) {
@@ -388,6 +382,7 @@ public class HomeController implements Initializable {
     public static boolean isHomeScreen() {
         return homeScreen;
     }
+
     private List<Movie> loadAllMovies() {
         try {
             return MovieAPI.getMovies();
@@ -396,6 +391,7 @@ public class HomeController implements Initializable {
             return new ArrayList<>();
         }
     }
+
     public void disableButtons (boolean maybe){
         searchField.setDisable(maybe);
         genreComboBox.setDisable(maybe);
@@ -404,10 +400,6 @@ public class HomeController implements Initializable {
         searchBtn.setDisable(maybe);
         resetBtn.setDisable(maybe);
     }
-
-
-
-
 
     private void setupDatabase() throws DatabaseException {
         DatabaseManager.getDatabase();
@@ -419,7 +411,10 @@ public class HomeController implements Initializable {
             Movie movie = (Movie) clickedItem;
             if (watchlistRepository.isInWatchlist(movie)) {
                 watchlistRepository.removeFromWatchlist(movie);
-                switchToWatchlist();
+                if(!homeScreen){
+                    switchToWatchlist();
+                }
+
             } else {
                 watchlistRepository.addToWatchlist(movie);
             }
@@ -427,7 +422,6 @@ public class HomeController implements Initializable {
             throw new DatabaseException(cce.getMessage(), cce.getCause());
         }
     };
-
 }
 
 
