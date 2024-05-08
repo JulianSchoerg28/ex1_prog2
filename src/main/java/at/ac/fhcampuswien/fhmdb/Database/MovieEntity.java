@@ -42,7 +42,37 @@ public class MovieEntity {
         this.rating = rating;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public String getApiId() {
+        return apiId;
+    }
 
     public static String genresToString(List<Genre> genres){
         StringBuilder genreString = new StringBuilder();
@@ -62,6 +92,7 @@ public class MovieEntity {
 
         return returnList;
     }
+
 
 
 
