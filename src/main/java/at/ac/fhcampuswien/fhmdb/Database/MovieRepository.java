@@ -45,7 +45,6 @@ public class MovieRepository {
                 throw new DatabaseException("Failed to add all movies",e);
             }
         }
-
     }
 
     public MovieEntity MovieToMovieEntity(Movie movie){
