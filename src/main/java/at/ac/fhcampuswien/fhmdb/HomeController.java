@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 
@@ -182,28 +183,30 @@ public class HomeController implements Initializable {
     }
 
     private void performSearch() {
-        ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
+        if (homeScreen) {
+            ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
 
-        String query = searchField.getText();
-        String genre = genreComboBox.getValue();
-        String releaseYear = releaseYearBox.getValue();
-        String rating = ratingComboBox.getValue();
+            String query = searchField.getText();
+            String genre = genreComboBox.getValue();
+            String releaseYear = releaseYearBox.getValue();
+            String rating = ratingComboBox.getValue();
 
-        try {
-            filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
-        } catch (MovieApiException e) {
-            showAlert("Error", "Failed to filer movies from API: " + e.getMessage());
+            try {
+                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+            } catch (MovieApiException e) {
+                showAlert("Error", "Failed to filer movies from API: " + e.getMessage());
+            }
+
+            if (movieListView != null) {
+                movieListView.setItems(filteredMovieList);
+                movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
+            }
+
+            observableMovies = filteredMovieList;
         }
+    }
 
-        if (movieListView != null) {
-            movieListView.setItems(filteredMovieList);
-            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
-        }
-
-        observableMovies = filteredMovieList;
-
-}
     private void toggleSortOrder() {
         if (sortBtn.getText().equals("Sort (asc)")) {
                 sortBtn.setText("Sort (desc)");
@@ -306,6 +309,7 @@ public class HomeController implements Initializable {
     public void switchToHome() {
         try {
             homeScreen = true;
+            disableButtons(false);
             homeBtn.setStyle("-fx-background-color: #00FF00;");
             watchlistBtn.setStyle("-fx-background-color: #f5c518;");
 
@@ -324,8 +328,10 @@ public class HomeController implements Initializable {
 
     public void switchToWatchlist() {
         homeScreen = false;
+        disableButtons(true);
         homeBtn.setStyle("-fx-background-color: #f5c518;");
         watchlistBtn.setStyle("-fx-background-color: #00FF00;");
+
 
         resetFilter();
 
@@ -390,6 +396,17 @@ public class HomeController implements Initializable {
             return new ArrayList<>();
         }
     }
+    public void disableButtons (boolean maybe){
+        searchField.setDisable(maybe);
+        genreComboBox.setDisable(maybe);
+        releaseYearBox.setDisable(maybe);
+        ratingComboBox.setDisable(maybe);
+        searchBtn.setDisable(maybe);
+        resetBtn.setDisable(maybe);
+    }
+
+
+
 
 
     private void setupDatabase() throws DatabaseException {
