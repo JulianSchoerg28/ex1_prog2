@@ -39,7 +39,15 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
                 }
             }
         });
+
+        sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                detail.setMaxWidth(newScene.getWidth() - 30);
+                genre.setMaxWidth(newScene.getWidth() - 30);
+            }
+        });
     }
+
 
     @Override
     protected void updateItem(Movie movie, boolean empty){
@@ -74,6 +82,15 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
             title.fontProperty().set(title.getFont().font(20));
             detail.setMaxWidth(this.getScene().getWidth() - 30);
             genre.setMaxWidth(this.getScene().getWidth() - 30);
+            detail.setWrapText(true);
+            layout.setPadding(new Insets(10));
+            layout.spacingProperty().set(10);
+            layout.alignmentProperty().set(javafx.geometry.Pos.CENTER_LEFT);
+
+            if (this.getScene() != null) {
+                detail.setMaxWidth(this.getScene().getWidth() - 30);
+                genre.setMaxWidth(this.getScene().getWidth() - 30);
+            }
             detail.setWrapText(true);
             layout.setPadding(new Insets(10));
             layout.spacingProperty().set(10);

@@ -3,27 +3,29 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.Database.*;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
-import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
+import at.ac.fhcampuswien.fhmdb.sort.AscendingSort;
+import at.ac.fhcampuswien.fhmdb.sort.DescendingSort;
+import at.ac.fhcampuswien.fhmdb.sort.MovieSort;
+import at.ac.fhcampuswien.fhmdb.sort.UnsortedState;
 import at.ac.fhcampuswien.fhmdb.ui.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 
 public class HomeController implements Initializable {
@@ -63,6 +65,12 @@ public class HomeController implements Initializable {
     public WatchlistRepository watchlistRepository;
     private static boolean homeScreen = true;
 
+    private MovieSort movieSort = new MovieSort();
+    private AscendingSort ascendingSort = new AscendingSort();
+    private DescendingSort descendingSort = new DescendingSort();
+    private UnsortedState unsortedState = new UnsortedState();
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,7 +100,7 @@ public class HomeController implements Initializable {
                 showAlert("Database Error", "Failed to update movies in database: " + ex.getMessage());
             }
 
-        }finally {
+        }
 
             observableMovies.addAll(allMovies);
 
@@ -107,7 +115,9 @@ public class HomeController implements Initializable {
             setupUIListeners();
 
             homeBtn.setStyle("-fx-background-color: #00FF00");
-        }
+
+            movieSort.setState(unsortedState);
+
     }
 
     private List<Movie> getMoviesfromDB () throws DatabaseException {
@@ -199,30 +209,34 @@ public class HomeController implements Initializable {
             }
 
             observableMovies = filteredMovieList;
+            movieSort.sort(observableMovies);
         }
     }
 
     private void toggleSortOrder() {
         if (sortBtn.getText().equals("Sort (asc)")) {
                 sortBtn.setText("Sort (desc)");
-                sortasc(observableMovies);
+                movieSort.setState(ascendingSort);
             } else {
                 sortBtn.setText("Sort (asc)");
-                sortdesc(observableMovies);
+                movieSort.setState(descendingSort);
             }
+        movieSort.sort(observableMovies);
     }
 
 
-
-    public void sortasc(ObservableList<Movie> observableMovies) {
-        List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
-        observableMovies.setAll(sortedMovie);
+/*
+     public void sortasc(ObservableList<Movie> observableMovies) {
+       List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
+       observableMovies.setAll(sortedMovie);
     }
 
     public void sortdesc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
-        observableMovies.setAll(sortedMovie);
-    }
+        observableMovies.setAll(sortedMovie); }
+*/
+
+
 
 
     public void resetFilter() {
@@ -256,6 +270,7 @@ public class HomeController implements Initializable {
         }
 
         observableMovies = newMovieList;
+        movieSort.sort(observableMovies);
     }
 
     public long countMoviesFrom(List<Movie> movies, String director) {
