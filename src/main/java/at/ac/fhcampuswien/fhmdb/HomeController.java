@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.Database.*;
+import at.ac.fhcampuswien.fhmdb.ObserverPattern.Observer;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
@@ -14,6 +15,7 @@ import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 
 
 
-public class HomeController implements Initializable {
+public class HomeController implements Initializable, Observer {
     @FXML
     public JFXButton searchBtn;
 
@@ -75,11 +77,15 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
         movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
         try {
             watchlistRepository = new WatchlistRepository();
-            System.out.println("WatchlistRepository initialized successfully.");
+            try{
+                watchlistRepository.addObserver(this);
+            }catch (Exception e){
+                showAlert("Observer Error", "Failed to add Observer");
+            }
+
         } catch (DatabaseException e) {
             showAlert("Database Error","Failed to initialize the watchlist: "+e.getMessage());
         }
@@ -101,12 +107,10 @@ public class HomeController implements Initializable {
             }
 
         }
-
             observableMovies.addAll(allMovies);
 
-            // initialize UI stuff
-            movieListView.setItems(observableMovies);   // set data of observable list to list view
-            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
+            movieListView.setItems(observableMovies);
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
 
             initializeGenreComboBox();
             initializeReleaseYearBox();
@@ -386,6 +390,7 @@ public class HomeController implements Initializable {
         }
 
     }
+
     public void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -440,6 +445,14 @@ public class HomeController implements Initializable {
             throw new DatabaseException(e.getMessage(), e.getCause());
         }
     };
+
+
+    @Override
+    public void update(String message) {
+        Platform.runLater(() -> showAlert("Watchlist Update", message));
+    }
+
+
 }
 
 
