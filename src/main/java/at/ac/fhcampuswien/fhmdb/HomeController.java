@@ -1,12 +1,17 @@
 package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.Database.*;
+import at.ac.fhcampuswien.fhmdb.ObserverPattern.Observer;
 import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPIRequestBuilder;
+import at.ac.fhcampuswien.fhmdb.sort.AscendingSort;
+import at.ac.fhcampuswien.fhmdb.sort.DescendingSort;
+import at.ac.fhcampuswien.fhmdb.sort.MovieSort;
+import at.ac.fhcampuswien.fhmdb.sort.UnsortedState;
 import at.ac.fhcampuswien.fhmdb.ui.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
@@ -27,7 +32,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class HomeController implements Initializable {
+
+public class HomeController implements Initializable, Observer {
     @FXML
     public JFXButton searchBtn;
 
@@ -64,14 +70,26 @@ public class HomeController implements Initializable {
     public WatchlistRepository watchlistRepository;
     private static boolean homeScreen = true;
 
+    private MovieSort movieSort = new MovieSort();
+    private AscendingSort ascendingSort = new AscendingSort();
+    private DescendingSort descendingSort = new DescendingSort();
+    private UnsortedState unsortedState = new UnsortedState();
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
+        movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
         try {
             watchlistRepository = new WatchlistRepository();
-            System.out.println("WatchlistRepository initialized successfully.");
+            try{
+                watchlistRepository.addObserver(this);
+            }catch (Exception e){
+                showAlert("Observer Error", "Failed to add Observer");
+            }
+
         } catch (DatabaseException e) {
             showAlert("Database Error","Failed to initialize the watchlist: "+e.getMessage());
         }
@@ -92,13 +110,11 @@ public class HomeController implements Initializable {
                 showAlert("Database Error", "Failed to update movies in database: " + ex.getMessage());
             }
 
-        }finally {
-
+        }
             observableMovies.addAll(allMovies);
 
-            // initialize UI stuff
-            movieListView.setItems(observableMovies);   // set data of observable list to list view
-            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
+            movieListView.setItems(observableMovies);
+            movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked));
 
             initializeGenreComboBox();
             initializeReleaseYearBox();
@@ -107,7 +123,9 @@ public class HomeController implements Initializable {
             setupUIListeners();
 
             homeBtn.setStyle("-fx-background-color: #00FF00");
-        }
+
+            movieSort.setState(unsortedState);
+
     }
 
     private List<Movie> getMoviesfromDB () throws DatabaseException {
@@ -140,6 +158,7 @@ public class HomeController implements Initializable {
         ObservableList<String> genreObservableList = FXCollections.observableArrayList(genreArray);
         genreComboBox.setItems(genreObservableList);
     }
+
 
     private void initializeReleaseYearBox() {
         // initialize releaseYearBox
@@ -199,28 +218,35 @@ public class HomeController implements Initializable {
             }
 
             observableMovies = filteredMovieList;
+            movieSort.sort(observableMovies);
         }
     }
 
     private void toggleSortOrder() {
         if (sortBtn.getText().equals("Sort (asc)")) {
                 sortBtn.setText("Sort (desc)");
-                sortasc(observableMovies);
+                movieSort.setState(ascendingSort);
             } else {
                 sortBtn.setText("Sort (asc)");
-                sortdesc(observableMovies);
+                movieSort.setState(descendingSort);
             }
+        movieSort.sort(observableMovies);
     }
 
-    public void sortasc(ObservableList<Movie> observableMovies) {
-        List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
-        observableMovies.setAll(sortedMovie);
+
+/*
+     public void sortasc(ObservableList<Movie> observableMovies) {
+       List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
+       observableMovies.setAll(sortedMovie);
     }
 
     public void sortdesc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
-        observableMovies.setAll(sortedMovie);
-    }
+        observableMovies.setAll(sortedMovie); }
+*/
+
+
+
 
     public void resetFilter() {
 
@@ -262,6 +288,7 @@ public class HomeController implements Initializable {
         System.out.println(moviesss.size());
         return moviesss.size();
     }
+//    gibt die Anzahl der Filme eines bestimmten Regisseurs zurück.
 
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
         List<Movie> betweenYears = movies.stream().filter(movie -> {
@@ -275,6 +302,7 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
         return betweenYears;
     }
+
 
     public int getLongestMovieTitel(List<Movie> movies) {
         int titelLength = movies.stream()
@@ -377,6 +405,15 @@ public class HomeController implements Initializable {
         return homeScreen;
     }
 
+    private List<Movie> loadAllMovies() {
+        try {
+            return MovieAPI.getMovies();
+        } catch (MovieApiException e) {
+            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
     public void disableButtons (boolean maybe){
         searchField.setDisable(maybe);
         genreComboBox.setDisable(maybe);
@@ -385,6 +422,14 @@ public class HomeController implements Initializable {
         searchBtn.setDisable(maybe);
         resetBtn.setDisable(maybe);
     }
+
+/*    private void setupDatabase() throws DatabaseException {
+        try {
+            DatabaseManager.getDatabase();
+        }catch (DatabaseException e){
+            throw new DatabaseException("Could not get Database", e.getCause());
+        }
+    }*/
 
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
         WatchlistRepository watchlistRepository = new WatchlistRepository();
@@ -403,6 +448,14 @@ public class HomeController implements Initializable {
             throw new DatabaseException(e.getMessage(), e.getCause());
         }
     };
+
+
+    @Override
+    public void update(String message) {
+        Platform.runLater(() -> showAlert("Watchlist Update", message));
+    }
+
+
 }
 
 

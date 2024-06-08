@@ -1,18 +1,9 @@
 package at.ac.fhcampuswien.fhmdb;
-
-import at.ac.fhcampuswien.fhmdb.Database.DatabaseManager;
-import at.ac.fhcampuswien.fhmdb.Database.MovieEntity;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.Database.WatchlistRepository;
-import at.ac.fhcampuswien.fhmdb.exceptions.DatabaseException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Objects;
 
 public class FhmdbApplication extends Application {
