@@ -49,9 +49,9 @@ public class MovieAPI {
     }
 
 
-    public static List<Movie> filteredMovies(String query, String genre, String releaseYear, String rating) throws MovieApiException{
+    public static List<Movie> filteredMovies(String urlString) throws MovieApiException{
 
-        //build the correct Url
+       /* //build the correct Url
 
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://prog2.fh-campuswien.ac.at/movies?");
@@ -78,12 +78,12 @@ public class MovieAPI {
         urlString.append(String.join("&", queryParams));
         System.out.println(urlString.toString());
 
-        //call the url
+ */       //call the url
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(urlString.toString())
+                .url(urlString)
                 .addHeader("User-Agent", "http.agent")
                 .build();
 

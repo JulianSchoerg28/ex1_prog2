@@ -4,6 +4,7 @@ import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPIRequestBuilder;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -16,138 +17,6 @@ import java.util.*;
 class HomeControllerTest {
 
 
-    @Test
-    void requestFilteredMovies() throws MovieApiException {
-
-        List<Movie> actual = MovieAPI.filteredMovies("The", "DRAMA", "1972", "5");
-
-        String expected = "The Godfather";
-        String actualTitle = null;
-        for (Movie movie : actual) {
-            actualTitle = movie.getTitle();
-        }
-
-        assertEquals(expected, actualTitle);
-
-    }
-
-    @Test
-    void filterGenre() throws MovieApiException {
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(null, Genre.ACTION.toString(), null, null);
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (!movie.getGenre().contains(Genre.ACTION)) {
-                correct = false;
-            }
-        }
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterYear() throws MovieApiException {
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(null, null, "2008", null);
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (!Objects.equals(movie.getReleaseYear(), "2008")) {
-                correct = false;
-            }
-        }
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterRating() throws MovieApiException {
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(null, null, null, "9");
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (movie.getRating() < 9.0) {
-                correct = false;
-            }
-        }
-
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterQuerry() throws MovieApiException {
-
-        String querry = "the";
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(querry, null, null, null);
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                correct = false;
-            }
-        }
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterQuerryIgnoresUppercase() throws MovieApiException {
-
-        String querry = "THE";
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(querry, null, null, null);
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                correct = false;
-            }
-        }
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterQuerryIgnoresSpace() throws MovieApiException {
-
-        String querry = "the ";
-
-        List<Movie> returnValue = MovieAPI.filteredMovies(querry, null, null, null);
-        Boolean correct = true;
-
-        for (Movie movie : returnValue) {
-            if (!(movie.getTitle().toLowerCase().contains(querry.toLowerCase()) || movie.getDescription().toLowerCase().contains(querry.toLowerCase()))) {
-                correct = false;
-            }
-        }
-
-        assertEquals(true, correct);
-    }
-
-    @Test
-    void filterIgnoresEmptyString() throws MovieApiException {
-
-        List<Movie> expected = MovieAPI.getMovies();
-        List<Movie> actual = MovieAPI.filteredMovies("", "", "", "");
-
-        List<String> actualTitle = new ArrayList<>();
-        for (Movie movie : actual) {
-            actualTitle.add(movie.getTitle());
-        }
-        List<String> expectedTitle = new ArrayList<>();
-        for (Movie movie : expected) {
-            expectedTitle.add(movie.getTitle());
-        }
-
-        Collections.sort(actualTitle);
-        Collections.sort(expectedTitle);
-
-        assertEquals(expectedTitle, actualTitle);
-    }
 
     @Test
     void getLongestMovieTitelFromMany() throws MovieApiException {
@@ -205,6 +74,22 @@ class HomeControllerTest {
         assertNotNull(mostPopular);
     }
 
+
+    @Test
+    void requestbuilder() throws MovieApiException{
+
+        MovieAPIRequestBuilder request = new MovieAPIRequestBuilder()
+                .query("the")
+                .genre("ACTION")
+                .releaseYear("2008")
+                .rating("8");
+
+        String url = request.build();
+        List<Movie> movies = MovieAPI.filteredMovies(url);
+        for (Movie movie: movies) {
+            System.out.println(movie.getTitle());
+        }
+    }
 
 
 

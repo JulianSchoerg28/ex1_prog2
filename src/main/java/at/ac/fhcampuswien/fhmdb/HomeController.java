@@ -6,6 +6,7 @@ import at.ac.fhcampuswien.fhmdb.exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPIRequestBuilder;
 import at.ac.fhcampuswien.fhmdb.ui.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
@@ -68,7 +69,6 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
-        movieListView.setCellFactory(lv -> new MovieCell(onAddToWatchlistClicked));
         try {
             watchlistRepository = new WatchlistRepository();
             System.out.println("WatchlistRepository initialized successfully.");
@@ -141,7 +141,6 @@ public class HomeController implements Initializable {
         genreComboBox.setItems(genreObservableList);
     }
 
-
     private void initializeReleaseYearBox() {
         // initialize releaseYearBox
         releaseYearBox.setPromptText("Filter by Release Year");
@@ -181,14 +180,15 @@ public class HomeController implements Initializable {
         if (homeScreen) {
             ObservableList<Movie> filteredMovieList = FXCollections.observableArrayList();
 
-
-            String query = searchField.getText();
-            String genre = genreComboBox.getValue();
-            String releaseYear = releaseYearBox.getValue();
-            String rating = ratingComboBox.getValue();
+            String requestURL = new MovieAPIRequestBuilder()
+                    .genre(genreComboBox.getValue())
+                    .query(searchField.getText())
+                    .releaseYear(releaseYearBox.getValue())
+                    .rating(ratingComboBox.getValue())
+                    .build();
 
             try {
-                filteredMovieList.addAll(MovieAPI.filteredMovies(query, genre, releaseYear, rating));
+                filteredMovieList.addAll(MovieAPI.filteredMovies(requestURL));
             } catch (MovieApiException e) {
                 showAlert("Error", "Failed to filer movies from API: " + e.getMessage());
             }
@@ -212,8 +212,6 @@ public class HomeController implements Initializable {
             }
     }
 
-
-
     public void sortasc(ObservableList<Movie> observableMovies) {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
@@ -223,7 +221,6 @@ public class HomeController implements Initializable {
         List<Movie> sortedMovie = new ArrayList<>(observableMovies).stream().sorted(Comparator.comparing(Movie::getTitle).reversed()).collect(Collectors.toList());
         observableMovies.setAll(sortedMovie);
     }
-
 
     public void resetFilter() {
 
@@ -265,7 +262,6 @@ public class HomeController implements Initializable {
         System.out.println(moviesss.size());
         return moviesss.size();
     }
-//    gibt die Anzahl der Filme eines bestimmten Regisseurs zurück.
 
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
         List<Movie> betweenYears = movies.stream().filter(movie -> {
@@ -279,7 +275,6 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
         return betweenYears;
     }
-
 
     public int getLongestMovieTitel(List<Movie> movies) {
         int titelLength = movies.stream()
@@ -382,15 +377,6 @@ public class HomeController implements Initializable {
         return homeScreen;
     }
 
-    private List<Movie> loadAllMovies() {
-        try {
-            return MovieAPI.getMovies();
-        } catch (MovieApiException e) {
-            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
-            return new ArrayList<>();
-        }
-    }
-
     public void disableButtons (boolean maybe){
         searchField.setDisable(maybe);
         genreComboBox.setDisable(maybe);
@@ -399,14 +385,6 @@ public class HomeController implements Initializable {
         searchBtn.setDisable(maybe);
         resetBtn.setDisable(maybe);
     }
-
-/*    private void setupDatabase() throws DatabaseException {
-        try {
-            DatabaseManager.getDatabase();
-        }catch (DatabaseException e){
-            throw new DatabaseException("Could not get Database", e.getCause());
-        }
-    }*/
 
     private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) -> {
         WatchlistRepository watchlistRepository = new WatchlistRepository();
