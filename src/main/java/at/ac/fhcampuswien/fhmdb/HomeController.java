@@ -101,10 +101,10 @@ public class HomeController implements Initializable, Observer {
             }
 
         } catch (DatabaseException e) {
-            showAlert("Database Error","Failed to initialize the watchlist: "+e.getMessage());
+            showAlert("Database Error","Failed to initialize the watchlist: "+e.getCause());
         }
 
-        movieListView.setCellFactory(listView -> new MovieCell(onAddToWatchlistClicked));
+
 
         try {
             allMovies = MovieAPI.getMovies();
@@ -411,18 +411,25 @@ public class HomeController implements Initializable, Observer {
         alert.showAndWait();
     }
 
+    public void watchlistAlert(String titel, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titel);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public static boolean isHomeScreen() {
         return homeScreen;
     }
 
-    private List<Movie> loadAllMovies() {
-        try {
-            return MovieAPI.getMovies();
-        } catch (MovieApiException e) {
-            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
-            return new ArrayList<>();
-        }
-    }
+//    private List<Movie> loadAllMovies() {
+//        try {
+//            return MovieAPI.getMovies();
+//        } catch (MovieApiException e) {
+//            showAlert("Error", "Unable to load movies from API: " + e.getMessage());
+//            return new ArrayList<>();
+//        }
+//    }
 
     public void disableButtons (boolean maybe){
         searchField.setDisable(maybe);
@@ -462,7 +469,7 @@ public class HomeController implements Initializable, Observer {
 
     @Override
     public void update(String message) {
-        Platform.runLater(() -> showAlert("Watchlist Update", message));
+        Platform.runLater(() -> watchlistAlert("Watchlist Update", message));
     }
 
 

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 
 public class DatabaseManager {
-    public static final String DB_URL = "jdbc:h2:file: ./db/moviedb";
+    public static final String DB_URL = "jdbc:h2:file:./db/movies";
 
     public static final String user = "user";
     public static final String password = "password";
@@ -57,7 +57,7 @@ public class DatabaseManager {
         return this.watchlistDao;
     }
 
-    public static DatabaseManager getDatabase() throws DatabaseException {
+        public static DatabaseManager getDatabase() throws DatabaseException {
         try{
             if(instance == null){
                 instance = new DatabaseManager();
