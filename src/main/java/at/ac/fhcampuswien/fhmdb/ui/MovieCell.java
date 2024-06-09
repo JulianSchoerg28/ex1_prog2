@@ -35,7 +35,7 @@ private ClickEventHandler<Movie> addToWatchlistClicked;
                 try {
                     addToWatchlistClicked.onClick(item);
                 } catch (DatabaseException e) {
-                    new HomeController().showAlert("Watchlist Error", "Failed to update watchlist: "+ e.getMessage());
+                    HomeController.getInstance().showAlert("Watchlist Error", "Failed to update watchlist: "+ e.getMessage());
                 }
             }
         });

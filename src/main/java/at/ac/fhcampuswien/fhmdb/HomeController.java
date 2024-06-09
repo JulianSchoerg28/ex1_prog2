@@ -17,6 +17,7 @@ import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,7 +76,16 @@ public class HomeController implements Initializable, Observer {
     private DescendingSort descendingSort = new DescendingSort();
     private UnsortedState unsortedState = new UnsortedState();
 
+    private static HomeController instance;
 
+    private HomeController() {}
+
+    public static synchronized HomeController getInstance(){
+        if (instance == null) {
+            instance = new HomeController();
+        }
+        return instance;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
